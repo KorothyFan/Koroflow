@@ -12,8 +12,10 @@ const entries = ['README.md', 'NOTICE.md', 'AGENTS.md', 'package.json', '.gitign
   'skills/hypit-haiyi/SKILL.md', 'skills/hypit-haiyi/agents/openai.yaml',
   'skills/hypit-haiyi/references/setup.md', 'skills/hypit-haiyi/references/capabilities.md',
   'skills/hypit-haiyi/references/production.md', 'templates', 'third-party', 'packages/provider-haiyi/package.json',
+  'skills/hypit-haiyi/references/character-replacement.md',
   'skills/video-director/SKILL.md', 'skills/video-director/agents/openai.yaml',
   'skills/video-director/references/storyboard-handoff.md',
+  'skills/video-director/references/reference-adaptation.md',
   'packages/provider-haiyi/tsconfig.json', 'packages/provider-haiyi/src', 'packages/provider-haiyi/test'];
 const temp = await mkdtemp(join(tmpdir(), 'hypit-haiyi-bundle-'));
 try {
