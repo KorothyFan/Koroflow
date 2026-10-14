@@ -4,6 +4,8 @@
 
 ## 从复刻分析进入制作
 
+同一原片制作多个版本，或委托包含特定口头禅、参考音频、背景改动、核心笑点和并发要求时，读 [多版本复刻委托](multi-version-recreation.md)，先区分各版本、固定特征与剧情变化、声音回合与并发范围。
+
 先读导演技能的 [复刻前期创作](../../video-director/references/reference-adaptation.md)。使用已安装 Hypit 的 `references/creation/reference-video.md`、`transformations.md` 理解原片；执行素材检查前查看当前 `media` 命令帮助。本地 probe、抽帧、片段截取和画面网格可用于分析；转写另核实本地工具或服务账号，不能为了分析自动接入新的付费服务。
 
 `BRIEF.md` 记录原片与目标角色素材、原角色到目标角色的映射、要保留的内容、允许改变的内容和已接受预算。`TREATMENT.md` 保存如何迁移角色表演和镜头关系，镜头制作表关联源时间、目标时间、角色参考和实际生成任务。原片分析与目标项目的正式剧本分别保存；目标正式台词仍由 Author Source 的 `<script>` 唯一管理。

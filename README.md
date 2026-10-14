@@ -68,6 +68,14 @@ Hypit 原技能已有 Brief/Treatment、脚本与语义时间、图像/视频导
 
 制作时会重点检查跨镜头身份、身体/服装、遮挡后恢复、多人互动、道具接触、倒影、背景及音画同步，而不是仅替换脸或检查首帧。小样和重试仍属于付费生成，只在已接受范围内执行。详细约定见 [角色替换制作](skills/hypit-haiyi/references/character-replacement.md)。
 
+### 多版本委托的提示词结构
+
+推荐按“原片 → 独立版本数 → 原角色识别 → 各版映射 → 视觉风格 → 必须保留的剧情/笑点 → 允许改动 → 逐角色台词与音频 → 模型偏好 → 并发与预算”组织委托。可复制 [多版本复刻委托模板](templates/replication-brief.md)，只填写本次实际需要的内容。
+
+工作流将长委托拆成每版、每镜的具体模型请求，避免角色或声音串用。剧情中的发型变化等笑点单独记录，不因“一致性”要求被固定掉。台词、字幕和参考声音按说话回合绑定；指向同一回合的互斥要求先澄清。音频路径需对应当前机器可用文件。
+
+独立成片数量与并发请求上限分别记录；并行制作仍受素材依赖、Runtime/工具能力和账号限流约束。当前 Provider 不含 Wan3，可保留用户备选偏好，但需要核实海艺服务是否实际可用并选择对应执行路径，不能把失败自动当成版权问题或沿用不兼容参数反复提交。详细规则见 [多版本复刻委托](skills/hypit-haiyi/references/multi-version-recreation.md)。
+
 ## 哪些环节需要付费
 
 根据固定版本的 [Hypit 说明](https://github.com/hypit-ai/hypit/blob/85e01c76716498e6ec5b8bdfb6b374ca67f0195a/README.zh-CN.md)，Hypit 不按人头或渲染次数收费，也不添加水印；模型服务费用由所选服务方收取。
@@ -139,7 +147,7 @@ verify 编译 Provider、运行 mock tests，在临时独立项目里检查图�
 
 公开源码：[KorothyFan/hypit-haiyi-workflow](https://github.com/KorothyFan/hypit-haiyi-workflow)。
 
-下载源码与技能包：[v0.3.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.3.0)。此版本加入视频复刻与角色替换的专门工作流；本地安装与 mock/plan 验证通过，尚未执行真实付费生成或角色替换成片验证。
+下载源码与技能包：[v0.4.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.4.0)。此版本补充多版本角色映射、核心变化、声音回合与并发约定，并提供复刻委托模板；本地安装与 mock/plan 验证通过，尚未执行真实付费生成或角色替换成片验证。
 
 代码库包含源码、技能、模板、安装脚本和来源说明。本机配置、运行时数据库与账号凭据均不上传；安装脚本也不会发布 GitHub 仓库或插件市场条目。这里提供本地统一 Skill 入口，原基础插件保留。
 
