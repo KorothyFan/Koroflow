@@ -12,6 +12,25 @@
 
 整合提升工作组织、连续性与可编辑性，不改变模型基础画质。TTS、音乐及增强等尚未绑定到 Provider，可以通过海艺原技能获取素材再导入。此仓库是集成源码与技能，不是离线模型或完整独立二进制安装包。
 
+## 与海艺 Skill、Hypit 的关系
+
+**本仓库是整合层，不包含海艺原 Skill 或完整 Hypit 工具。** 它提供统一技能、海艺 API 适配器、项目模板和配置脚本，将两个工具组织成一套视频生产流程。只下载本仓库，还需要准备下列依赖；其中一部分可由脚本下载或补装，不必全部手动下载。
+
+| 组件 | 是否需要 | 如何准备 |
+| --- | --- | --- |
+| 本仓库的统一技能 `hypit-haiyi` | 统一工作流入口 | 随本仓库提供，运行 `install-skill` 安装 |
+| Hypit 执行工具 | 必需，负责项目编排和渲染 | 已有指定版本时用 `setup --hypit-root` 复用；没有时用 `setup --install` 联网下载指定版本并安装依赖 |
+| Hypit 原技能 `hypit` | 完整工作流使用其创作与制作指导 | `install-skill` 会从已准备的 Hypit 工具目录补装缺失的技能；已有技能则保留 |
+| 海艺原技能 `haiyi-aigc` | 用于海艺登录及语音、音乐、增强等补充功能 | 本仓库不会下载或安装它；需要这些功能时，请从海艺原插件/技能的提供渠道单独安装 |
+| 海艺账号与有效 Token | 云端生成必需 | 使用自己的账号授权；设置 `HAIYI_API_TOKEN`，或复用海艺原技能已保存的登录凭据 |
+| Node.js、FFmpeg、FFprobe；从零准备 Hypit 时另需 Git、pnpm | 本地运行依赖 | 单独安装，再按下方步骤配置 |
+
+当前 Provider 已直接实现海艺图片和视频 API 调用。因此，如果只用本仓库已支持的图片/视频模型，并且已取得有效 Token，可以不安装海艺原 Skill。需要通过原技能登录，或使用 TTS、音乐、视频增强、字幕擦除等功能时，仍需单独安装海艺原 Skill；使用它时也需按其说明准备 Python 环境。
+
+建议首次使用者按以下顺序准备：本地运行依赖 → Hypit 工具（可由脚本下载）→ 统一技能和 Hypit 原技能（由脚本安装）→ 海艺账号授权；需要补充功能时再安装海艺原技能。已经安装好的组件可以复用。
+
+Hypit 原项目与安装说明见 [hypit-ai/hypit](https://github.com/hypit-ai/hypit)。安装 Hypit 技能本身不等于已经安装 Hypit 执行工具，也不会提供海艺账号或生成额度。
+
 ## 快速使用
 
 需要 Node.js >=22.15。已有 Hypit 和 FFmpeg 时：
@@ -27,7 +46,13 @@ node scripts/workflow.mjs check "D:/videos/my-ad/haiyi-text-video.svml" --projec
 node scripts/workflow.mjs plan "D:/videos/my-ad/haiyi-text-video.svrun" --project "D:/videos/my-ad"
 ```
 
-新机器先准备 Git、pnpm 10.33.0、FFmpeg/FFprobe，将第一条改为 `setup --install`。脚本固定 Hypit 版本到 `upstream.json` 指定 commit，不会重置其他版本的已有 checkout。详细步骤见 [安装与调用](skills/hypit-haiyi/references/setup.md)。
+新机器先准备 Node.js >=22.15、Git、pnpm 10.33.0、FFmpeg/FFprobe。克隆本仓库后，将上面 `setup --hypit-root ...` 那一行替换为：
+
+```powershell
+node scripts/workflow.mjs setup --install --ffmpeg "D:/tools/ffmpeg/bin/ffmpeg.exe" --ffprobe "D:/tools/ffmpeg/bin/ffprobe.exe"
+```
+
+再继续执行 `install-skill` 等后续命令。`setup --install` 会从上游另行下载 Hypit，固定到 `upstream.json` 指定 commit，不会下载海艺原 Skill，也不会重置其他版本的已有 checkout。详细步骤见 [安装与调用](skills/hypit-haiyi/references/setup.md)。
 
 新任务直接说：**“使用 $hypit-haiyi 制作视频。”** 自动匹配保持开启，但具体选择仍取决于任务描述；显式指定最稳定。安装脚本也给已安装的两个基础技能补充视频路由说明，原文备份到 `.local/skill-backups`，其余内容保留。基础插件更新后可重新运行 install-skill 补回入口说明。
 
