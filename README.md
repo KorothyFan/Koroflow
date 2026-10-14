@@ -76,6 +76,16 @@ Hypit 原技能已有 Brief/Treatment、脚本与语义时间、图像/视频导
 
 独立成片数量与并发请求上限分别记录；并行制作仍受素材依赖、Runtime/工具能力和账号限流约束。当前 Provider 不含 Wan3，可保留用户备选偏好，但需要核实海艺服务是否实际可用并选择对应执行路径，不能把失败自动当成版权问题或沿用不兼容参数反复提交。详细规则见 [多版本复刻委托](skills/hypit-haiyi/references/multi-version-recreation.md)。
 
+## 可选 MiniMax H3 技能与 Seedance 方法复用
+
+[minimax-h3-opencode-skills](https://github.com/unknowlei/minimax-h3-opencode-skills) 提供六个导演、规划、提示词与审查技能，另依赖 MiniMax 官方的 [h3-prompt-writing](https://github.com/MiniMax-AI/MiniMax-H3/tree/d21241f0a4b3acbb34c97dae47fa417b7065e438/skills/h3-prompt-writing)。目录结构可供 Codex 使用；安装时应放到当前环境的技能目录。它们是提示词指导，安装不提供模型额度或生成服务。可请 Codex 安装社区仓库 `skills/` 下的全部六个技能，并另外安装官方依赖。本仓库的 `install-skill` 不自动安装这些可选依赖，源码 ZIP 也不包含它们。
+
+统一流程吸收的通用方法是：明确每份素材的职责；记录保留、修改与剧情中必须发生的变化；逐镜描述构图、动作过程与结束状态；台词、字幕和声音按角色/事件绑定；提交前检查矛盾与时间可行性。Seedance 默认使用这些约定，保留自己的模型提示词和接口格式。不会将 H3 六段结构、标签、输入限制或原版逐镜确认流程硬套到 Seedance，也不重复询问已确定的分镜。详见 [通用提示词设计](skills/hypit-haiyi/references/prompt-direction.md)。
+
+2026-10-14 的海艺只读查询列出 `minimax-h3` 全能参考、`minimax-h3-frame` 首尾帧与 `minimax-h3-max` 极速首尾帧入口。用户选择 H3 时，可按当前海艺参数配置，通过原海艺技能生成素材，再导入 Hypit；当前自定义 Provider 尚未加入 H3 原生路由。模型列出不代表已实测严格编辑、声音控制或成片效果。全能参考配置的计费说明包含参考视频时长与输出时长，生成前仍须核对实时价格与预算。详见 [H3 可选路径](skills/hypit-haiyi/references/h3-integration.md)。
+
+只想使用外部原版交互导演时，可显式说“使用 `$minimax-h3-creative-director` 编写 H3 提示词”；日常复刻仍从 `$hypit-haiyi` 进入。H3 技能与通用方法可同时存在，不会因安装它们而切换已有账号或默认模型。
+
 ## 哪些环节需要付费
 
 根据固定版本的 [Hypit 说明](https://github.com/hypit-ai/hypit/blob/85e01c76716498e6ec5b8bdfb6b374ca67f0195a/README.zh-CN.md)，Hypit 不按人头或渲染次数收费，也不添加水印；模型服务费用由所选服务方收取。
@@ -147,7 +157,7 @@ verify 编译 Provider、运行 mock tests，在临时独立项目里检查图�
 
 公开源码：[KorothyFan/hypit-haiyi-workflow](https://github.com/KorothyFan/hypit-haiyi-workflow)。
 
-下载源码与技能包：[v0.4.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.4.0)。此版本补充多版本角色映射、核心变化、声音回合与并发约定，并提供复刻委托模板；本地安装与 mock/plan 验证通过，尚未执行真实付费生成或角色替换成片验证。
+下载源码与技能包：[v0.5.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.5.0)。此版本吸收 MiniMax 提示词方法用于 Seedance，并说明可选 H3 技能/海艺路径；本地安装与 mock/plan 验证通过，H3 配置只做了只读查询，尚未执行真实付费生成或角色替换成片验证。
 
 代码库包含源码、技能、模板、安装脚本和来源说明。本机配置、运行时数据库与账号凭据均不上传；安装脚本也不会发布 GitHub 仓库或插件市场条目。这里提供本地统一 Skill 入口，原基础插件保留。
 

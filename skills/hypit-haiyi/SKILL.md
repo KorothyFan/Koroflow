@@ -24,6 +24,7 @@ description: 使用海艺生成或编辑素材、Hypit 编排和渲染的统一�
 1. 新制作先读内置 [导演与剧本](../video-director/SKILL.md)，完成符合目标的创作方案、剧本、分镜和素材依赖。把用户事实、画幅、时长、素材范围和已接受付费范围保存到 `BRIEF.md`，导演方案保存到 `TREATMENT.md`。只请求文字成果时不提交媒体生成；已委托完整制作且范围明确时继续生产，不增加逐步审批。
 2. 新项目用 `init` 放在当前任务的工作目录，工具和 Provider 共用，项目的素材、Runs、Results 独立。已有项目先读 `PROGRESS.md`、Sources、Runs、Results 和 Runtime 状态后继续；沿用已采用的方案和剧本，只调整本次要求涉及的部分。草稿采用后，Author Source 的 `<script>` 是唯一正式台词来源，分镜引用片段 id。
 3. 根据角色、场景和产品一致性安排参考图、首尾帧和镜头间素材关系。写图片或视频提示词前读 Hypit 对应的 image-direction / video-direction 指导与模型文档。不要直接拿演示提示词当成用户的成片。
+   写或审查视频请求时读 [参考素材与逐镜提示词设计](references/prompt-direction.md)，明确素材职责、保留/改变项、动作过程和声音角色。它适用于 Seedance；H3 特有格式与参数只在 [H3 可选路径](references/h3-integration.md) 使用，不改变默认模型或已接受流程。
 4. 通过本集成 Provider 生成已支持的图片和视频，使用 Hypit 的 Source、Run 和明确 Candidates 复用已接受素材。参考附件按实际需要上传，不自动扫描或上传其他项目素材。
 5. 检查 Source，并用 `plan` 核对剩余请求、绑定、输入约束和复用；必要时调用 `pricing` 查实时价格。模型与价格以海艺实时返回为准，不能从旧测试推断账号可用性。提交前读取 [执行与复用](references/production.md)。
 6. 用户已授权的生成范围与预算支持执行 `build`，不在每个镜头重复询问。配置账号本身不是付费生成授权；尚未明确的付费范围要在实际提交前与用户确认。

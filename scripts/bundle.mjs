@@ -14,6 +14,7 @@ const entries = ['README.md', 'NOTICE.md', 'AGENTS.md', 'package.json', '.gitign
   'skills/hypit-haiyi/references/production.md', 'templates', 'third-party', 'packages/provider-haiyi/package.json',
   'skills/hypit-haiyi/references/character-replacement.md',
   'skills/hypit-haiyi/references/multi-version-recreation.md',
+  'skills/hypit-haiyi/references/prompt-direction.md', 'skills/hypit-haiyi/references/h3-integration.md',
   'skills/video-director/SKILL.md', 'skills/video-director/agents/openai.yaml',
   'skills/video-director/references/storyboard-handoff.md',
   'skills/video-director/references/reference-adaptation.md',
