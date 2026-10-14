@@ -1,0 +1,40 @@
+<?svml using="@hypit/markup@1"?>
+<svml>
+  <import as="seedance" from="@hypit/seedance@1"/>
+  <import as="text" from="@hypit/text@1"/>
+  <import as="time" from="@hypit/timeline-author@1"/>
+  <import as="space" from="@hypit/spatial@1"/>
+  <import as="mediaop" from="@hypit/media-operations@1"/>
+  <import as="visual" from="@hypit/visual-track@1"/>
+  <import as="audio" from="@hypit/audio-track@1"/>
+  <import as="film" from="@hypit/film@1"/>
+  <import as="html" from="@hypit/html-video@1"/>
+  <import as="style" source="./style.svs"/>
+
+  <text:Value id="prompt">
+    A polished vertical product teaser with a confident presenter, quick readable gestures,
+    clean studio lighting, and a strong final reveal.
+  </text:Value>
+  <seedance:TextVideo id="take" model="2.5" prompt={prompt} duration="4"
+    resolution="720p" aspect-ratio="9:16" generate-audio="true"/>
+
+  <time:Clock id="clock" frame-rate="30"/>
+  <time:Timeline id="timeline" clock={clock} end="4s"/>
+  <mediaop:Normalize id="take-media" source={take.video} clock={clock}
+    video="primary-moving" audio="default" span-authority="video"/>
+  <time:Window id="take-window" timeline={timeline.timeline} from="start" for={take-media.extent}/>
+  <space:Canvas id="canvas" width="720" height="1280"/>
+  <space:Frame id="full-frame" within={canvas.bounds} left="0%" top="0%" right="100%" bottom="100%"/>
+  <audio:Track id="sound" timeline={timeline.timeline}>
+    <audio:Clip id="take-sound" source={take-media.media} during={take-window}/>
+  </audio:Track>
+  <visual:Track id="picture" timeline={timeline.timeline}>
+    <visual:Clip id="take-picture" media={take-media.media} during={take-window}
+      frame={full-frame} z="0" fit="cover"/>
+  </visual:Track>
+  <film:Film id="film" canvas={canvas.canvas} timeline={timeline.timeline} appearance={style.film.main}>
+    <film:Track source={picture.visual}/>
+    <film:Track source={sound.audio}/>
+  </film:Film>
+  <html:Video id="final" composition={film.composition} timeline={timeline.timeline}/>
+</svml>

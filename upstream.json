@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/hypit-ai/hypit.git",
+  "commit": "85e01c76716498e6ec5b8bdfb6b374ca67f0195a",
+  "version": "0.3.1",
+  "packageManager": "pnpm@10.33.0"
+}

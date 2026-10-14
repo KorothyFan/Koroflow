@@ -1,0 +1,14 @@
+{
+  "name": "hypit-haiyi-workflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Hypit + Haiyi video production workflow and Codex skill",
+  "engines": { "node": ">=22.15.0" },
+  "scripts": {
+    "setup": "node scripts/workflow.mjs setup",
+    "install-skill": "node scripts/workflow.mjs install-skill",
+    "verify": "node scripts/workflow.mjs verify",
+    "bundle": "node scripts/bundle.mjs"
+  }
+}

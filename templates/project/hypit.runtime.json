@@ -1,0 +1,29 @@
+{
+  "format": "hypit.runtime-local@1",
+  "dataRoot": ".hypit/runtimes/local",
+  "credentials": { "env": { "use": "@hypit/credential-store-env" } },
+  "endpoints": {
+    "media.local": { "use": "@hypit/media-local", "config": { "defaultConcurrency": 2 } },
+    "html.local": { "use": "@hypit/provider-html-local", "config": { "workers": 2, "defaultConcurrency": 1 } },
+    "haiyi.default": {
+      "use": "@example/provider-haiyi",
+      "pool": "haiyi.default",
+      "config": {
+        "baseUrl": "https://art.huya.info",
+        "apiKey": { "store": "env", "key": "HAIYI_API_TOKEN" },
+        "defaultConcurrency": 2,
+        "pollIntervalMs": 5000,
+        "requestTimeoutMs": 120000,
+        "actionLimits": {
+          "submit": { "concurrency": 2, "rate": { "limit": 2, "periodMs": 1000 } },
+          "poll": { "concurrency": 8 },
+          "collect": { "concurrency": 2 }
+        }
+      }
+    }
+  },
+  "bindings": {
+    "@hypit/seedance@1#seedance-2.5": "haiyi.default",
+    "@hypit/gpt-image@1#gpt-image-2": "haiyi.default"
+  }
+}

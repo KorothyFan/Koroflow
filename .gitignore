@@ -1,0 +1,11 @@
+.local/
+node_modules/
+dist/
+.hypit/
+.env
+.env.*
+!.env.example
+tokens.json
+projects/
+*.zip
+*.log
