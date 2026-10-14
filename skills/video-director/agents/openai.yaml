@@ -1,0 +1,4 @@
+interface:
+  display_name: "导演与剧本"
+  short_description: "从创意到可执行剧本、分镜和素材计划，独立策划或接入海艺与 Hypit 制作"
+  default_prompt: "使用 $video-director，为我的视频构思创作方案、可表演的剧本和分镜。"

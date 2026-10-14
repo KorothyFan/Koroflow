@@ -1,10 +1,11 @@
 # Hypit + 海艺视频工坊
 
-统一的 Codex 视频生产技能和代码库：海艺负责图片/视频素材生成，Hypit 负责分镜、时间线、素材复用和成片渲染。已安装的两个基础插件可以保留；从 `$hypit-haiyi` 统一进入工作流。
+统一的 Codex 视频生产技能和代码库：导演与剧本模块负责前期创作，海艺负责图片/视频素材生成，Hypit 负责分镜、时间线、素材复用和成片渲染。已安装的两个基础插件可以保留；从 `$hypit-haiyi` 统一进入工作流。
 
 ## 提供的内容
 
 - `skills/hypit-haiyi/`：可安装统一技能，自动匹配视频制作请求，写入默认海艺流程与跨任务使用约定。
+- `skills/video-director/`：可独立使用的导演与剧本技能，产出创作方案、剧本、分镜、连续性锚点和素材计划；统一工作流默认调用。
 - `packages/provider-haiyi/`：TypeScript Provider，直接连接海艺 OpenAPI，覆盖 Seedance 2.5 和 GPT Image 2.5 Flare。
 - `templates/project/`：图片、四秒视频、Runtime Profile 模板。
 - `scripts/workflow.mjs`：复用/安装固定版本 Hypit、配置 FFmpeg、安装技能、新建独立项目、检查/计划/生成命令。
@@ -19,6 +20,7 @@
 | 组件 | 是否需要 | 如何准备 |
 | --- | --- | --- |
 | 本仓库的统一技能 `hypit-haiyi` | 统一工作流入口 | 随本仓库提供，运行 `install-skill` 安装 |
+| 本仓库的导演技能 `video-director` | 前期策划，可单独使用 | `install-skill` 一并安装；只写剧本可用 `install-skill --director-only` 独立安装，无需先 setup |
 | Hypit 执行工具 | 必需，负责项目编排和渲染 | 已有指定版本时用 `setup --hypit-root` 复用；没有时用 `setup --install` 联网下载指定版本并安装依赖 |
 | Hypit 原技能 `hypit` | 完整工作流使用其创作与制作指导 | `install-skill` 会从已准备的 Hypit 工具目录补装缺失的技能；已有技能则保留 |
 | 海艺原技能 `haiyi-aigc` | 用于海艺登录及语音、音乐、增强等补充功能 | 本仓库不会下载或安装它；需要这些功能时，请从海艺原插件/技能的提供渠道单独安装 |
@@ -30,6 +32,33 @@
 建议首次使用者按以下顺序准备：本地运行依赖 → Hypit 工具（可由脚本下载）→ 统一技能和 Hypit 原技能（由脚本安装）→ 海艺账号授权；需要补充功能时再安装海艺原技能。已经安装好的组件可以复用。
 
 Hypit 原项目与安装说明见 [hypit-ai/hypit](https://github.com/hypit-ai/hypit)。安装 Hypit 技能本身不等于已经安装 Hypit 执行工具，也不会提供海艺账号或生成额度。
+
+## 导演与剧本模块
+
+Hypit 原技能已有 Brief/Treatment、脚本与语义时间、图像/视频导演、表演与声音、素材依赖等创作指导。本仓库额外提供可独立调用的导演入口，将这些制作约定接到我们的海艺流程；不是购买一个新的生成模型，也不保证仅靠安装技能提高画质。
+
+完整流程为：**创作目标 → 导演方案 → 剧本与分镜 → 素材计划 → 海艺生成 → Hypit 编排与渲染 → 成片检查**。适用于广告、短剧、叙事短片、讲解视频；沿用已有项目的正式方案，修改时只调整相关部分。
+
+- 只写剧本：说“使用 `$video-director` 写一支 30 秒产品广告的剧本和分镜，暂不生成。”
+- 完整制作：说“使用 `$hypit-haiyi`，从导演方案开始制作视频。”实际云端生成按已接受的付费范围执行。
+
+只需要文字策划时，克隆代码库后运行 `node scripts/workflow.mjs install-skill --director-only`。此模式只需 Node 与可用的 Codex 环境，不要求 Hypit、FFmpeg、海艺技能或账号；也可以将 `skills/video-director` 文件夹直接安装到用户技能目录。
+
+剧本草稿和分镜保存到视频项目，正式采用后 Hypit Author Source 的 `<script>` 是唯一正式台词来源；分镜引用片段 id，避免多份台词改稿不同步。仅请求剧本或分镜不会提交付费媒体生成。
+
+## 哪些环节需要付费
+
+根据固定版本的 [Hypit 说明](https://github.com/hypit-ai/hypit/blob/85e01c76716498e6ec5b8bdfb6b374ca67f0195a/README.zh-CN.md)，Hypit 不按人头或渲染次数收费，也不添加水印；模型服务费用由所选服务方收取。
+
+| 环节 | 费用来源 |
+| --- | --- |
+| 导演/剧本/分镜指导、本地项目编排和渲染 | 没有单独的 Hypit 技能购买费或渲染费；使用本机计算资源 |
+| 在 Codex 内创作剧本和操作项目 | 按所用模型/平台的订阅、额度或 API 计费方式，不由 Hypit 另收导演费 |
+| 海艺图片、视频、配音、音乐、增强等云端任务 | 按实际功能、模型和账号的海艺额度/价格计费，不能假定所有处理免费 |
+| HypiHub 或其他外部模型服务 | 如果另外接入，由相应服务方收费；我们的默认流程不切换到这些服务 |
+| 本地运行的渲染、音频处理或本地模型 | 本地处理不产生 Hypit 云端推理费；可能需要额外工具、硬件或存储 |
+
+因此不能说“所有 AI 功能都免费”。当前流程使用你的海艺账号做已支持的云端生成，提交前按实时价格核对；不在文档中承诺固定价格或无限额度。Hypit 的多租户托管/SaaS 和商业再分发场景另受其 [许可证附加条款](third-party/HYPIT-LICENSE) 约束，不能把个人本地使用的收费结论扩展到这些场景。
 
 ## 快速使用
 
@@ -88,7 +117,7 @@ verify 编译 Provider、运行 mock tests，在临时独立项目里检查图�
 
 公开源码：[KorothyFan/hypit-haiyi-workflow](https://github.com/KorothyFan/hypit-haiyi-workflow)。
 
-下载源码与技能包：[v0.1.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.1.0)。这是首个配置与 mock/plan 验证版本，尚未执行真实付费生成验证。
+下载源码与技能包：[v0.2.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.2.0)。此版本加入导演与剧本模块，完成技能格式、安装和 mock/plan 验证，尚未执行真实付费生成验证。
 
 代码库包含源码、技能、模板、安装脚本和来源说明。本机配置、运行时数据库与账号凭据均不上传；安装脚本也不会发布 GitHub 仓库或插件市场条目。这里提供本地统一 Skill 入口，原基础插件保留。
 

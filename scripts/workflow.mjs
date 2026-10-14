@@ -11,7 +11,6 @@ const localFile = join(repo, '.local/config.json');
 const provider = join(repo, 'packages/provider-haiyi');
 const upstream = JSON.parse(readFileSync(join(repo, 'upstream.json'), 'utf8'));
 const skillHome = resolve(process.env.CODEX_HOME || join(homedir(), '.codex'), 'skills');
-const bundledSkill = join(repo, 'skills/hypit-haiyi');
 const [command = 'help', ...input] = process.argv.slice(2);
 
 function exec(binary, args, options = {}) {
@@ -139,11 +138,17 @@ async function setup(args) {
 }
 
 async function installSkill(args) {
-  if (args.length) throw new Error('install-skill takes no arguments.');
-  const cfg = await config();
+  const directorOnly = args.length === 1 && args[0] === '--director-only';
+  if (args.length && !directorOnly) throw new Error('install-skill accepts only --director-only.');
+  const cfg = directorOnly ? null : await config();
+  for (const name of directorOnly ? ['video-director'] : ['video-director', 'hypit-haiyi']) {
+    const destination = join(skillHome, name);
+    await mkdir(destination, { recursive: true });
+    await cp(join(repo, 'skills', name), destination, { recursive: true, force: true });
+    console.log(`Installed bundled skill: ${destination}`);
+  }
+  if (directorOnly) return;
   const target = join(skillHome, 'hypit-haiyi');
-  await mkdir(target, { recursive: true });
-  await cp(bundledSkill, target, { recursive: true, force: true });
   const hypitSkill = join(skillHome, 'hypit');
   if (!existsSync(join(hypitSkill, 'SKILL.md'))) {
     const original = join(cfg.hypitRoot, 'skills/hypit');
@@ -154,7 +159,7 @@ async function installSkill(args) {
   await saveJson(join(target, 'references/local-setup.json'), {
     format: 'hypit-haiyi.skill-local@1', repositoryRoot: repo,
     workflowScript: join(repo, 'scripts/workflow.mjs'), configFile: localFile,
-    hypitRoot: cfg.hypitRoot, hypitSkill,
+    hypitRoot: cfg.hypitRoot, hypitSkill, directorSkill: join(skillHome, 'video-director'),
     haiyiSkill: existsSync(join(haiyiSkill, 'SKILL.md')) ? haiyiSkill : null,
   });
   const routing = '<!-- hypit-haiyi-routing:start -->\n## 本地统一视频入口\n\n当用户要求制作、继续或修改完整视频时，优先读取相邻的 [Hypit + 海艺统一技能](../hypit-haiyi/SKILL.md)，复用其已有 Provider 与配置。单独图片、音乐、语音或媒体工具任务仍按当前技能处理；用户明确选择其他流程时遵循用户选择。配置账号不代表授权付费生成。\n<!-- hypit-haiyi-routing:end -->';
@@ -167,7 +172,7 @@ async function installSkill(args) {
     if (!existsSync(backup)) { await mkdir(dirname(backup), { recursive: true }); await writeFile(backup, original); }
     await writeFile(path, original.replace(/(^# [^\r\n]+\r?\n)/m, `$1\n${routing}\n`));
   }
-  console.log(`Installed unified skill: ${target}`);
+  console.log('Unified workflow and director module ready.');
 }
 
 async function initProject(path, cfg) {
@@ -188,7 +193,7 @@ async function initProject(path, cfg) {
   await saveJson(profilePath, profile);
   await writeFile(join(project, '.gitignore'), '.hypit/\nnode_modules/\npackages/provider-haiyi\n.env*\ntokens.json\n');
   await writeFile(join(project, 'BRIEF.md'), '# 制作目标\n\n记录用户目标、时长、画幅、素材范围和已接受的付费范围。当前仅为示例模板，尚未授权付费生成。\n');
-  await writeFile(join(project, 'TREATMENT.md'), '# 创作方案\n\n按用户目标改写示例提示词，设计分镜与素材依赖关系。\n');
+  await writeFile(join(project, 'TREATMENT.md'), '# 创作方案\n\n使用 video-director 明确创作主张、故事/论证、表演、画面与声音，再设计分镜和素材依赖。正式采用的台词只保存在 Author Source 的 <script> 中。\n');
   await writeFile(join(project, 'PROGRESS.md'), '# 当前进展\n\n项目已建立，尚未提交生成任务。\n\n下一步：完成 Brief 和分镜，修改 Source，运行 check 和 plan。\n');
   console.log(`Project ready: ${project}`);
   return project;
@@ -263,6 +268,7 @@ async function info() {
     providerCompiled: existsSync(join(provider, 'dist/activation.js')),
     ffmpegPresent: existsSync(cfg.ffmpeg), ffprobePresent: existsSync(cfg.ffprobe),
     unifiedSkillInstalled: existsSync(join(skillHome, 'hypit-haiyi/SKILL.md')),
+    directorSkillInstalled: existsSync(join(skillHome, 'video-director/SKILL.md')),
     credentialAvailable: Boolean(env.HAIYI_API_TOKEN), credentialValidity: 'not checked',
     liveGenerationVerified: false }, null, 2));
 }
@@ -288,7 +294,7 @@ try {
     exec(process.execPath, [cfg.cli, ...input], { env: await childEnvironment(baseUrl) });
   }
   else if (command === 'help' || command === '--help') {
-    console.log('Hypit + Haiyi workflow\n\nsetup --hypit-root <dir> | --install [--ffmpeg <path> --ffprobe <path> --base-url <url>]\ninstall-skill\ninfo\ninit <new-project-dir>\nverify\ncheck <source> --project <dir>\nplan|pricing|build <run> --project <dir> [--follow]\ndoctor --project <dir>\nhypit <native Hypit arguments>\n\nOnly build submits generation tasks. Read README.md before paid execution.');
+    console.log('Hypit + Haiyi workflow\n\nsetup --hypit-root <dir> | --install [--ffmpeg <path> --ffprobe <path> --base-url <url>]\ninstall-skill [--director-only]\ninfo\ninit <new-project-dir>\nverify\ncheck <source> --project <dir>\nplan|pricing|build <run> --project <dir> [--follow]\ndoctor --project <dir>\nhypit <native Hypit arguments>\n\nOnly build submits generation tasks. Read README.md before paid execution.');
   }
   else throw new Error(`Unknown workflow command: ${command}`);
 } catch (error) {

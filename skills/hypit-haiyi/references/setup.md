@@ -19,6 +19,8 @@ node scripts/workflow.mjs install-skill
 
 `setup --install` 克隆 upstream.json 指定的 Hypit 版本到 `.local/hypit` 并安装依赖，只下载和配置，不生成媒体。pnpm 需预先安装；缺失时可用 `npm install -g pnpm@10.33.0`。已有其他版本 Hypit 不会被重置。FFmpeg/FFprobe 未传路径时查 PATH；未发现则停止并说明缺失项。
 
+`install-skill` 一并安装统一入口 `hypit-haiyi` 和导演剧本模块 `video-director`。只需要文字策划时运行 `node scripts/workflow.mjs install-skill --director-only`：无需先 setup，也无需 Hypit 工具、FFmpeg 或海艺账号。文字策划使用当前对话模型，平台自身的计费方式仍适用。
+
 `install-skill` 安装到 CODEX_HOME/skills，未设置 CODEX_HOME 时使用用户 `.codex/skills`。缺失的 Hypit 基础技能从工具目录补装，不整篇替换已有基础技能。给已安装 Hypit 与海艺的技能入口补充统一视频路由说明，原文先备份到 `.local/skill-backups`，重复安装不会重复追加。插件更新可能覆盖此路由说明，重新运行 install-skill 可补回。原海艺插件只用于补充操作，直接 Provider 的图片和视频生成无需它的 Python 脚本，但需要有效海艺 Token。
 
 以下从代码库根目录调用，项目和输入路径都相对当前终端目录，而非相对技能目录：
