@@ -1,0 +1,11 @@
+{
+  "reviewer": "operator",
+  "evidence": "替换为实际完整画面、音轨和编码文件的检查记录；没听取的声音不能填pass",
+  "checks": {
+    "brief_alignment": "not_checked",
+    "visual_continuity": "not_checked",
+    "audio_and_sync": "not_checked",
+    "clean_output": "not_checked",
+    "technical_integrity": "not_checked"
+  }
+}

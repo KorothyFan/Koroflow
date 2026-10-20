@@ -2,6 +2,7 @@
 node_modules/
 dist/
 .hypit/
+.koroflow/
 .env
 .env.*
 !.env.example
@@ -9,3 +10,6 @@ tokens.json
 projects/
 *.zip
 *.log
+__pycache__/
+*.py[cod]
+skills/**/references/local-setup.json

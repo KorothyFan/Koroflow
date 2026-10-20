@@ -1,6 +1,6 @@
 interface:
   display_name: "Hypit + 海艺视频工坊"
-  short_description: "统一视频复刻与角色替换、海艺素材生成和 Hypit 编排渲染，也支持原创制作"
+  short_description: "KoroFlow 的海艺与 Hypit 制作路径，支持视频复刻、角色替换及原创制作"
   default_prompt: "使用 $hypit-haiyi，复用已有海艺账号和 Hypit 配置，按照统一流程制作视频。"
 policy:
   allow_implicit_invocation: true

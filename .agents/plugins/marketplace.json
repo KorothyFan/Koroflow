@@ -1,0 +1,10 @@
+{
+  "name": "koro-workflow-plugins",
+  "interface": { "displayName": "KoroFlow 工作流" },
+  "plugins": [{
+    "name": "koro-workflow",
+    "source": { "source": "local", "path": "./" },
+    "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+    "category": "Productivity"
+  }]
+}

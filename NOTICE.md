@@ -1,6 +1,6 @@
 # 来源与范围
 
-本代码库为用户的 Hypit + 海艺集成工作流：统一 Skill、自定义海艺 Provider、配置模板与辅助脚本。
+本代码库提供 KoroFlow 可复用视频生产与运营工作流：平台无关的本地作品/质量/任务记录、统一技能、配置模板与辅助脚本，并包含 Hypit + 海艺制作适配器。
 
 Hypit 上游：https://github.com/hypit-ai/hypit 。选定 commit：85e01c76716498e6ec5b8bdfb6b374ca67f0195a。© 2026 Hypit.AI。模板采用 Hypit 的公开作者接口，Provider 采用 Hypit 的公开扩展接口；完整 Hypit 核心不包含在此源码包中，setup --install 按 upstream.json 单独下载。随包保留上游许可证文本于 third-party/HYPIT-LICENSE。
 

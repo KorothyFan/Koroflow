@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KoroFlow platform adapter declaration",
+  "type": "object", "required": ["id", "transport", "status", "operations"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "transport": {"enum": ["api", "mcp", "browser", "cli", "manual"]},
+    "status": {"enum": ["implemented", "external", "manual", "unconfigured"]},
+    "operations": {
+      "type": "object",
+      "propertyNames": {"enum": ["video.generate", "video.edit", "image.generate", "audio.generate", "video.compose", "publication.publish", "publication.schedule"]},
+      "additionalProperties": {"type": "object", "required": ["capabilities", "handoff"], "properties": {
+        "capabilities": {"type": "array", "items": {"type": "string"}}, "handoff": {"type": "string", "minLength": 1}
+      }, "additionalProperties": false}
+    }
+  },
+  "additionalProperties": false
+}

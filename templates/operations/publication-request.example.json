@@ -1,0 +1,10 @@
+{
+  "items": [{
+    "work_id": "sample-work-01",
+    "account_id": "sample-account-a",
+    "title_en": "A tiny delivery 📦",
+    "hashtags": ["#cute", "#funny"],
+    "cover": "Clear face and the parcel in the same frame",
+    "scheduled_at": "2099-10-20T00:00:00+08:00"
+  }]
+}

@@ -9,6 +9,33 @@ import { sealSeedanceRequest, seedancePorts } from "@hypit/seedance";
 
 import { capability, createHaiyiProvider, imageCapability, imageMapping, mapping } from "../src/provider.js";
 
+test("Numeric task IDs are checkpointed for both video and image submissions", async () => {
+  for (const image of [false, true]) {
+    let saved: unknown;
+    const provider = createHaiyiProvider({
+      instance: "numeric", pool: "numeric", apiKey: { store: "env", key: "unused" },
+      fetch: async () => Response.json({ task_id: 1680159, status: "submitted" }),
+    });
+    const constraints = canonicalize(image
+      ? sealGptImage2Request({ prompt: ["An orb"], aspectRatio: ["1:1"], resolution: ["2K"] })
+      : sealSeedanceRequest("seedance-2.5", { prompt: ["An orb"], duration: [4], resolution: ["720p"],
+          aspectRatio: ["9:16"], generateAudio: [true], webSearch: [false] }));
+    const need = { id: "need:numeric", capability: image ? imageCapability : capability,
+      returns: image ? generationTypes.imageSet : generationTypes.videoSet, constraints, result: "record:numeric" };
+    const registry = new EndpointRegistry(); await provider.install(registry);
+    const resolved = registry.resolve(need);
+    assert.equal(resolved.status, "resolved");
+    if (resolved.status !== "resolved" || resolved.registration.kind !== "asynchronous") throw new Error("Not routed");
+    const result = await resolved.registration.endpoint.start({ need,
+      command: { kind: "fulfill-need", id: "command:numeric", need }, operation: "operation:numeric",
+      resources: new MemoryResourceStore(), credentials: { apiKey: { secret: "offline" } },
+      checkpoint: async checkpoint => { saved = checkpoint; },
+    });
+    assert.equal(result.status, "pending");
+    assert.deepEqual(saved, { handle: image ? { taskId: "1680159", media: "image" } : { taskId: "1680159" }, receipt: { id: "1680159" } });
+  }
+});
+
 test("Haiyi mapping covers every Seedance 2.5 port", () => {
   assertMappingCoversPorts(seedancePorts["seedance-2.5"], mapping);
   assertMappingCoversPorts(gptImage2Ports, imageMapping);

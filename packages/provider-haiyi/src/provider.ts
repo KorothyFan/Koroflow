@@ -129,6 +129,15 @@ function findString(value: unknown, keys: readonly string[]): string | undefined
   return undefined;
 }
 
+function taskIdOf(value: Record<string, unknown>): string {
+  for (const field of ["task_id", "taskId", "id"]) {
+    const id = value[field];
+    if (typeof id === "string" && id.trim()) return id;
+    if (typeof id === "number" && Number.isSafeInteger(id) && id >= 0) return String(id);
+  }
+  throw new Error("Haiyi submission did not return a valid task_id; inspect remote tasks before retrying");
+}
+
 function findUrls(value: unknown): string[] {
   if (typeof value === "string") return /^https?:\/\//u.test(value) ? [value] : [];
   if (value === null || typeof value !== "object") return [];
@@ -276,8 +285,7 @@ export function createHaiyiProvider(options: {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
       });
-      const taskId = findString(submitted, ["task_id", "taskId", "id"]);
-      if (taskId === undefined) throw new Error("Haiyi submission did not return task_id");
+      const taskId = taskIdOf(submitted);
       const handle = { taskId };
       const receipt = { id: taskId };
       await context.checkpoint?.({ handle, receipt });
@@ -337,8 +345,7 @@ export function createHaiyiProvider(options: {
           parameters: normalizeImageParameters(wire.input as Record<string, unknown>),
         }),
       });
-      const taskId = findString(submitted, ["task_id", "taskId", "id"]);
-      if (taskId === undefined) throw new Error("Haiyi image submission did not return task_id");
+      const taskId = taskIdOf(submitted);
       const handle = { taskId, media: "image" };
       const receipt = { id: taskId };
       await context.checkpoint?.({ handle, receipt });

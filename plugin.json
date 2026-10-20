@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "koro-workflow",
+  "version": "0.7.0",
+  "description": "Reusable video workflow with quality gates, platform adapters, revision records, statistics and publishing handoffs.",
+  "author": { "name": "KorothyFan" },
+  "repository": "https://github.com/KorothyFan/Koroflow",
+  "keywords": ["video", "production", "operations", "publishing"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "KoroFlow 视频生产工作流",
+        "shortDescription": "质量规范、跨平台制作、交付统计与发布",
+        "longDescription": "以统一作品和事件记录连接导演、平台接入、质量检查、交付、统计与发布。包含海艺/Hypit制作路径及平台无关的本地核心；外部执行与账号授权按实际连接提供。",
+        "developerName": "KorothyFan",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": ["使用KoroFlow沿用本地规范制作并检查这条视频。", "检查我的作品版本、今日制作统计与发布计划。"]
+      }
+    }
+  }
+}
