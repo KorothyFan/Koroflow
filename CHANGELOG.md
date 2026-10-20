@@ -1,6 +1,6 @@
 # 变更记录
 
-## 0.7.0 — 开发分支
+## 0.7.0 — 2026-10-20 · 预览版
 
 - 将 KoroFlow 定位为平台无关的视频生产与运营工作流，新增 koroflow 统一技能；保留海艺/Hypit、导演及旧运营技能。
 - 新增独立本地核心：作品清单、参考职责、UUID 事件、修订指纹、质量检查与交付门槛、任务/结果未知记录、独立统计和按角色配置目标。
@@ -10,4 +10,4 @@
 - 修复海艺返回数字任务 ID 时丢失 checkpoint 的问题。
 - 修复旧运营预检忽略同作品坏元数据、漏文件交付记录及仅 SHA 历史去重的问题；无法确认记录身份时阻止发布规划。
 
-开发分支版本号不代表 GitHub Release 已发布。此前发布版本及附件以 [Releases](https://github.com/KorothyFan/Koroflow/releases) 为准。
+源码与技能包见 [v0.7.0 Release](https://github.com/KorothyFan/Koroflow/releases/tag/v0.7.0)。外部平台连接与真实生成/发布质量不由本地离线验证证明。

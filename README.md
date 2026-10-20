@@ -4,7 +4,7 @@
 
 制作平台可以是海艺、无限画布或其他生成服务；发布可以通过实际可用的 API、MCP、浏览器或人工执行。KoroFlow 保存素材职责、文件指纹、质量结果、任务证据和状态，平台执行通过适配器交接。现有海艺 / Hypit 路径保留。
 
-当前分支为 **0.7.0 开发版**。已经发布的下载版见 [GitHub Releases](https://github.com/KorothyFan/Koroflow/releases)，下载旧 Release 不会自动包含本分支的新能力。
+当前版本为 **v0.7.0 预览版**。下载源码与技能包、查看安装说明见 [v0.7.0 Release](https://github.com/KorothyFan/Koroflow/releases/tag/v0.7.0)。旧版本附件不会自动更新，新功能请下载对应版本。
 
 ## 当前能做什么
 
