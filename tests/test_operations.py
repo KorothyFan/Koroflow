@@ -71,7 +71,7 @@ class OperationsTest(unittest.TestCase):
         self.assertEqual(result["summary"]["delivered"], 1)
         self.assertEqual(result["summary"]["revising"], 1)
         self.assertEqual(result["summary"]["in_progress"], 0)
-        self.assertEqual(result["works"][0]["selected_file"], str(second / "成片输出/final.mp4"))
+        self.assertEqual(result["works"][0]["selected_file"], str((second / "成片输出/final.mp4").resolve()))
         self.assertEqual(result["works"][0]["delivered_on"], "2026-10-19")
         self.assertTrue((first / "成片输出/final.mp4").exists())
 
