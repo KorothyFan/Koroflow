@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "koro-workflow",
+  "version": "0.6.0",
+  "description": "AI video production, delivery records, statistics and offline publishing preflight, with Hypit and Haiyi integration.",
+  "author": { "name": "KorothyFan" },
+  "repository": "https://github.com/KorothyFan/hypit-haiyi-workflow",
+  "keywords": ["video", "production", "operations", "publishing"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "KoroFlow 视频生产与发布工作流",
+        "shortDescription": "制作、交付、统计与账号发布计划管理",
+        "longDescription": "包含视频导演、Hypit与海艺制作技能，以及自包含的作品核对和发布计划预检。平台执行与凭据由用户本地环境提供。",
+        "developerName": "KorothyFan",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": ["检查我的作品记录和今日制作统计。", "按指定账号和时间预检一份视频发布计划。"]
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "accounts": [{
+    "account_id": "sample-account-a",
+    "window": "sample-window",
+    "role": "sample-character",
+    "allowed_roles": ["sample-character"],
+    "tiktok_username": "replace_with_your_account",
+    "timezone": "Asia/Shanghai",
+    "enabled": true
+  }]
+}

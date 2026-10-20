@@ -1,0 +1,6 @@
+{
+  "timezone": "Asia/Shanghai",
+  "tracking_mode": "production_targets_only",
+  "accounts": [{ "account": "sample-production-target", "role": "sample-character", "daily_target": 2 }],
+  "weekend_targets": { "sample-character": 0 }
+}

@@ -9,3 +9,7 @@ For integration development, use the commit pinned in `upstream.json`. Run `node
 Never commit `.local`, credentials, node_modules, runtime databases or generated customer media. Keep package distribution source-only using `scripts/bundle.mjs`. Do not publish the repository or submit paid generation simply to validate installation.
 
 Preserve upstream attribution and terms from `NOTICE.md` and `third-party/HYPIT-LICENSE`. Do not describe this integration as an official joint plugin or claim live generation was verified by mock tests.
+
+For delivery records, production counts or publication planning, read `skills/koro-operations/SKILL.md`. Its Python CLI performs offline checks only. Run `python -X utf8 -m unittest discover -s tests -p "test_*.py" -v` after changing operations or packaging; use an available Python 3.11+ interpreter. Keep production-target and publishing-account registries separate. Preserve manual ledger fields by stable IDs and distinguish proposed plans, confirmed schedules and verified platform publications.
+
+The plugin uses root `plugin.json` and a repo catalog at `.agents/plugins/marketplace.json`. Source bundles must retain the explicit allowlist in `scripts/bundle.mjs`; never bundle whole local skill folders containing generated path indexes or runtime caches. Do not add local account records, device addresses, customer files or evidence screenshots to public examples.

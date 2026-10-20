@@ -1,0 +1,15 @@
+{
+  "format": "koro.operations@1",
+  "timezone": "Asia/Shanghai",
+  "paths": {
+    "projects": "../../projects",
+    "production_rules": "../../local-rules/production.md",
+    "creative_preferences": "../../local-rules/creative.md",
+    "production_targets": "./production-targets.example.json",
+    "statistics_snapshot": "../../local-data/statistics.json",
+    "publishing_accounts": "./publishing-accounts.example.json",
+    "account_snapshot": null,
+    "publication_tasks": "../../local-data/publication-tasks"
+  },
+  "display": { "scheduled_counts_as_published": true }
+}

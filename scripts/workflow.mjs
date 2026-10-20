@@ -3,7 +3,7 @@ import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { homedir, tmpdir } from 'node:os';
-import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -139,14 +139,24 @@ async function setup(args) {
 
 async function installSkill(args) {
   const directorOnly = args.length === 1 && args[0] === '--director-only';
-  if (args.length && !directorOnly) throw new Error('install-skill accepts only --director-only.');
-  const cfg = directorOnly ? null : await config();
-  for (const name of directorOnly ? ['video-director'] : ['video-director', 'hypit-haiyi']) {
+  const operationsOnly = args.length === 1 && args[0] === '--operations-only';
+  if (args.length && !directorOnly && !operationsOnly) throw new Error('install-skill accepts --director-only or --operations-only.');
+  const cfg = directorOnly || operationsOnly ? null : await config();
+  for (const name of directorOnly ? ['video-director'] : operationsOnly ? ['koro-operations'] : ['video-director', 'hypit-haiyi', 'koro-operations']) {
     const destination = join(skillHome, name);
     await mkdir(destination, { recursive: true });
-    await cp(join(repo, 'skills', name), destination, { recursive: true, force: true });
+    await cp(join(repo, 'skills', name), destination, { recursive: true, force: true,
+      filter: source => !['__pycache__', 'local-setup.json'].includes(basename(source)) });
     console.log(`Installed bundled skill: ${destination}`);
   }
+  if (!directorOnly) {
+    await saveJson(join(skillHome, 'koro-operations/references/local-setup.json'), {
+      format: 'koro.operations.skill-local@1', repositoryRoot: repo,
+      operationsScript: join(skillHome, 'koro-operations/scripts/operations.py'),
+      configFile: join(repo, '.local/operations.json'),
+    });
+  }
+  if (operationsOnly) return;
   if (directorOnly) return;
   const target = join(skillHome, 'hypit-haiyi');
   const hypitSkill = join(skillHome, 'hypit');
@@ -269,6 +279,7 @@ async function info() {
     ffmpegPresent: existsSync(cfg.ffmpeg), ffprobePresent: existsSync(cfg.ffprobe),
     unifiedSkillInstalled: existsSync(join(skillHome, 'hypit-haiyi/SKILL.md')),
     directorSkillInstalled: existsSync(join(skillHome, 'video-director/SKILL.md')),
+    operationsSkillInstalled: existsSync(join(skillHome, 'koro-operations/SKILL.md')),
     credentialAvailable: Boolean(env.HAIYI_API_TOKEN), credentialValidity: 'not checked',
     liveGenerationVerified: false }, null, 2));
 }
@@ -294,7 +305,7 @@ try {
     exec(process.execPath, [cfg.cli, ...input], { env: await childEnvironment(baseUrl) });
   }
   else if (command === 'help' || command === '--help') {
-    console.log('Hypit + Haiyi workflow\n\nsetup --hypit-root <dir> | --install [--ffmpeg <path> --ffprobe <path> --base-url <url>]\ninstall-skill [--director-only]\ninfo\ninit <new-project-dir>\nverify\ncheck <source> --project <dir>\nplan|pricing|build <run> --project <dir> [--follow]\ndoctor --project <dir>\nhypit <native Hypit arguments>\n\nOnly build submits generation tasks. Read README.md before paid execution.');
+    console.log('Hypit + Haiyi workflow\n\nsetup --hypit-root <dir> | --install [--ffmpeg <path> --ffprobe <path> --base-url <url>]\ninstall-skill [--director-only | --operations-only]\ninfo\ninit <new-project-dir>\nverify\ncheck <source> --project <dir>\nplan|pricing|build <run> --project <dir> [--follow]\ndoctor --project <dir>\nhypit <native Hypit arguments>\n\nProduction records and publishing preflight: python -X utf8 scripts/operations.py --help\nOnly build submits generation tasks. Read README.md before paid execution.');
   }
   else throw new Error(`Unknown workflow command: ${command}`);
 } catch (error) {

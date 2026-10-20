@@ -8,6 +8,12 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const destination = resolve(process.argv[2] || join(root, '..', 'hypit-haiyi-workflow.zip'));
 const entries = ['README.md', 'NOTICE.md', 'AGENTS.md', 'package.json', '.gitignore', '.gitattributes', '.env.example', 'upstream.json',
+  'plugin.json', '.agents/plugins/marketplace.json', 'docs/operations.md',
+  'scripts/operations.py', 'tests/test_operations.py', 'tests/test_distribution.py',
+  'skills/koro-operations/SKILL.md', 'skills/koro-operations/agents/openai.yaml',
+  'skills/koro-operations/scripts/operations.py',
+  'skills/koro-operations/references/setup.md', 'skills/koro-operations/references/records.md',
+  'skills/koro-operations/references/publication.md',
   'scripts/workflow.mjs', 'scripts/test-bootstrap.mjs', 'scripts/bundle.mjs',
   'skills/hypit-haiyi/SKILL.md', 'skills/hypit-haiyi/agents/openai.yaml',
   'skills/hypit-haiyi/references/setup.md', 'skills/hypit-haiyi/references/capabilities.md',

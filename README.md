@@ -2,10 +2,14 @@
 
 统一的 Codex 视频生产技能和代码库：导演与剧本模块负责前期创作，海艺负责图片/视频素材生成，Hypit 负责分镜、时间线、素材复用和成片渲染。已安装的两个基础插件可以保留；从 `$hypit-haiyi` 统一进入工作流。
 
+0.6.0新增 **KoroFlow 制作与发布管理**：将制作规范、作品身份、交付记录、统计快照与发布计划关联。提供portable插件清单和仓库市场入口，按需安装管理技能。当前可执行部分是本地配置/作品检查及发布计划预检，真实平台操作和台账写回继续依赖本地现有工具。参见[管理模块使用说明](docs/operations.md)。
+
 ## 提供的内容
 
 - `skills/hypit-haiyi/`：可安装统一技能，自动匹配视频制作请求，写入默认海艺流程与跨任务使用约定。
 - `skills/video-director/`：可独立使用的导演与剧本技能，产出创作方案、剧本、分镜、连续性锚点和素材计划；统一工作流默认调用。
+- `skills/koro-operations/`：制作交付与统计、发布计划、证据回填的技能入口，含自包含Python检查器；可用 `install-skill --operations-only` 单独安装。
+- `plugin.json`、`.agents/plugins/marketplace.json`：组合三项技能的插件包与仓库市场目录。
 - `packages/provider-haiyi/`：TypeScript Provider，直接连接海艺 OpenAPI，覆盖 Seedance 2.5 和 GPT Image 2.5 Flare。
 - `templates/project/`：图片、四秒视频、Runtime Profile 模板。
 - `scripts/workflow.mjs`：复用/安装固定版本 Hypit、配置 FFmpeg、安装技能、新建独立项目、检查/计划/生成命令。
@@ -146,6 +150,7 @@ node scripts/workflow.mjs build "D:/videos/my-ad/haiyi-text-video.svrun" --proje
 
 ```text
 node scripts/workflow.mjs verify
+python -X utf8 -m unittest discover -s tests -p "test_*.py" -v
 node scripts/bundle.mjs
 ```
 
@@ -157,7 +162,7 @@ verify 编译 Provider、运行 mock tests，在临时独立项目里检查图�
 
 公开源码：[KorothyFan/hypit-haiyi-workflow](https://github.com/KorothyFan/hypit-haiyi-workflow)。
 
-下载源码与技能包：[v0.5.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.5.0)。此版本吸收 MiniMax 提示词方法用于 Seedance，并说明可选 H3 技能/海艺路径；本地安装与 mock/plan 验证通过，H3 配置只做了只读查询，尚未执行真实付费生成或角色替换成片验证。
+已发布源码与技能包：[v0.5.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.5.0)。此版本吸收 MiniMax 提示词方法用于 Seedance，并说明可选 H3 技能/海艺路径；本地安装与 mock/plan 验证通过，H3 配置只做了只读查询，尚未执行真实付费生成或角色替换成片验证。0.6.0管理模块的源码和插件结构见当前分支，是否已发布新Release以GitHub实际记录为准。
 
 代码库包含源码、技能、模板、安装脚本和来源说明。本机配置、运行时数据库与账号凭据均不上传；安装脚本也不会发布 GitHub 仓库或插件市场条目。这里提供本地统一 Skill 入口，原基础插件保留。
 
