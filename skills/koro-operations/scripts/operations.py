@@ -144,6 +144,7 @@ def inventory(ctx, hash_files=False):
         issue(issues, "missing_projects", "Project root is not a directory", root)
         return {"works": [], "issues": issues}
     for file in metadata_files(root):
+        meta = None
         try:
             meta = read_json(file)
             if not isinstance(meta, dict):
@@ -156,6 +157,10 @@ def inventory(ctx, hash_files=False):
             stamp = timestamp(meta["updated_at"], require_offset=True)
         except (ValueError, OSError, TypeError) as exc:
             issue(issues, "invalid_metadata", str(exc), file)
+            if isinstance(meta, dict) and isinstance(meta.get("work_id"), str) and meta["work_id"].strip():
+                issues[-1]["work_id"] = meta["work_id"]
+            else:
+                issues[-1]["identity_unresolved"] = True
             continue
         work_id = meta["work_id"]
         first_issue = len(issues)
@@ -183,6 +188,8 @@ def inventory(ctx, hash_files=False):
                     occurred = occurred.replace(tzinfo=ctx.zone)
                 if event_type in {"delivered", "adopted"} and not event.get("evidence"):
                     raise ValueError("Delivery/adoption event needs evidence")
+                if event_type == "delivered" and (not isinstance(event.get("file"), str) or not event["file"].strip()):
+                    raise ValueError("A delivered event must select its actual file; cannot reuse an older selection")
                 if event_type in {"delivered", "adopted"} and event.get("delivered_on"):
                     datetime.strptime(event["delivered_on"], "%Y-%m-%d")
                 work["_events"].append((occurred, str(event_file), event, project))
@@ -264,7 +271,8 @@ def history(ctx, registry, issues):
                 raise ValueError("Task items/videos must be a list")
             for item in items:
                 work_id = item.get("work_id") or item.get("record_id", "").removeprefix("work:")
-                if not work_id:
+                if not work_id and not item.get("sha256"):
+                    issue(issues, "unidentifiable_publication_history", "History item has neither work identity nor SHA256", file)
                     continue
                 account_id = item.get("account_id", task.get("account_id"))
                 username = item.get("tiktok_username") or item.get("username") or task.get("tiktok_username")
@@ -293,7 +301,7 @@ def plan(ctx, request_file):
     requested = {item.get("work_id") for item in request["items"] if isinstance(item, dict) and isinstance(item.get("work_id"), str)}
     inv = inventory(ctx)
     issues = [{**i, "severity": "warning", "outside_request": True}
-              if i.get("work_id") not in requested else dict(i) for i in inv["issues"]]
+              if i.get("work_id") not in requested and not i.get("identity_unresolved") else dict(i) for i in inv["issues"]]
     registry = accounts(ctx, issues)
     previous = history(ctx, registry, issues)
     by_work = {w["work_id"]: w for w in inv["works"]}

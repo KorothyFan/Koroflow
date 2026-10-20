@@ -223,6 +223,35 @@ class OperationsTest(unittest.TestCase):
         self.assertEqual(call.returncode, 2)
         self.assertFalse(json.loads(call.stderr)["executed"])
 
+    def test_hash_only_publication_history_blocks_same_file(self):
+        project = self.project()
+        write(self.history / "prior.json", {"account_id": "a", "items": [{
+            "sha256": ops.digest(project / "成片输出/final.mp4"), "status": "published"}]})
+        self.assertIn("already_assigned_or_published", self.codes(ops.plan(self.ctx, self.request())))
+
+    def test_new_delivery_without_file_blocks_old_selection(self):
+        project = self.project()
+        self.event(project, "02", occurred_at="2026-10-20T10:00:00+08:00", file=None)
+        self.assertFalse(ops.plan(self.ctx, self.request())["preflight_ok"])
+
+    def test_invalid_revision_metadata_still_belongs_to_requested_work(self):
+        self.project()
+        revision = self.project("revision")
+        meta_file = revision / "项目文件/发布信息.json"
+        meta = ops.read_json(meta_file)
+        del meta["hashtags"]
+        write(meta_file, meta)
+        result = ops.plan(self.ctx, self.request())
+        self.assertFalse(result["preflight_ok"])
+        self.assertIn("invalid_metadata", self.codes(result))
+
+    def test_unreadable_metadata_identity_is_not_silently_ignored(self):
+        self.project()
+        bad = self.projects / "bad/项目文件/发布信息.json"
+        bad.parent.mkdir(parents=True)
+        bad.write_text("{invalid", encoding="utf-8")
+        self.assertFalse(ops.plan(self.ctx, self.request())["preflight_ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

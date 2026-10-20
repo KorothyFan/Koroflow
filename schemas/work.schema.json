@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KoroFlow new work manifest",
+  "type": "object",
+  "required": ["work_id", "role", "content", "project", "brief"],
+  "properties": {
+    "work_id": {"type": "string", "minLength": 1},
+    "role": {"type": "string", "minLength": 1},
+    "content": {"type": "string", "minLength": 1},
+    "project": {"type": "string", "minLength": 1},
+    "brief": {"type": "string", "minLength": 1},
+    "references": {"type": "array", "items": {"type": "object", "required": ["asset", "responsibility"], "properties": {"asset": {"type": "string"}, "responsibility": {"type": "string"}}}}
+  },
+  "additionalProperties": false
+}

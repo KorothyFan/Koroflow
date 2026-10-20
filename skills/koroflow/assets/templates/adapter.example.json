@@ -1,0 +1,11 @@
+{
+  "id": "my-canvas-platform",
+  "transport": "mcp",
+  "status": "unconfigured",
+  "operations": {
+    "video.generate": {
+      "capabilities": ["reference_image"],
+      "handoff": "填写本机实际可用的MCP工具、输入约束、任务查询与导出方法；未验证前保持unconfigured"
+    }
+  }
+}

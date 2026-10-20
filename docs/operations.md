@@ -1,6 +1,6 @@
 # KoroFlow 制作、统计与发布管理
 
-0.6.0内部第一版将现有生成技能与作品管理连接。可安装为技能，也提供根plugin.json及仓库市场目录。它不是开箱即用的云手机发布器：生成依赖、现有统计工具、魔云腾/比特连接及账号授权由本地环境提供。
+本模块从 0.6.0 起提供旧工程、账号、统计与发布预检。0.7.0 的统一入口是 `koroflow`，新增平台无关的版本/质量/任务核心；完整架构见 [架构说明](architecture.md)，新核心命令见 [工作流说明](../skills/koroflow/references/workflow.md)。本模块继续负责核对已有完整历史，不自动迁移旧工程。生成依赖、现有统计工具、设备连接及账号授权由本地环境提供。
 
 ## 当前可执行能力
 
@@ -13,7 +13,7 @@
 | snapshot --date | 读取原统计汇总及更新时间 | 不刷新，不重新定义生成/交付/采用口径 |
 | plan | 核对作品、账号、品类、指纹、历史任务及预约时间 | 不占用、不上传、不预约、不写回台账 |
 
-实际制作继续使用`hypit-haiyi`及导演技能。真实发布与回填通过用户环境已有工具执行；本版把步骤和证据约定固化为技能参考，没有内置云手机API执行器或Excel写入引擎。
+实际制作由统一入口选择平台，现有海艺路径使用 `hypit-haiyi` 及导演技能。真实发布与回填通过用户环境已有工具执行；本模块没有内置云手机 API 执行器或 Excel 写入引擎。`plan` 只预检；新核心 `prepare` 可在预检之后保存本地占用，后续状态按真实执行证据登记。
 
 ## 安装与本地使用
 
@@ -40,7 +40,7 @@ python -X utf8 scripts/operations.py plan --config .local/operations.json --requ
 
 ## 插件分发
 
-仓库根`plugin.json`是portable Agent Plugins入口，包含三个技能：hypit-haiyi、video-director、koro-operations。`.agents/plugins/marketplace.json`提供仓库市场来源。参考[官方打包说明](https://developers.openai.com/plugins/build/plugins)。
+仓库根 `plugin.json` 是 portable Agent Plugins 入口，包含四个技能：koroflow、hypit-haiyi、video-director、koro-operations。`.agents/plugins/marketplace.json` 提供仓库市场来源。参考[官方打包说明](https://developers.openai.com/plugins/build/plugins)。
 
 可用支持插件市场的客户端注册本仓库：
 
@@ -73,6 +73,6 @@ node scripts/bundle.mjs
 
 隔离测试覆盖修订去重、选定文件丢失、目录不等于采用、预约时区、退出账号、历史重复及未知结果等。分发测试验证独立安装、ZIP白名单和解压后运行。CI在Windows/Linux进行离线测试，实际平台操作尚未由这些测试证明。
 
-本版源码ZIP还通过了隔离配置下的Codex CLI市场注册与插件安装，三个技能均被识别；未验证桌面UI激活或真实平台执行。
+0.7.0 源码 ZIP 已在隔离配置下通过 Codex CLI 本地市场注册与插件安装，分发测试也覆盖解压和独立技能安装。桌面 UI 激活和真实平台执行仍需分别验证。
 
-下一阶段按日常真实委托接入正式平台执行器、跨进程任务占用和台账回填适配器，再增加自动选片与发布后数据观察。现有只读检查可以先用于真实项目；发现记录不完整时报告，不自动修订历史数据。
+新核心已提供同一工作空间的跨进程任务占用。后续按真实委托接入正式平台执行器与台账回填适配器，再增加选片与发布后数据观察。现有只读检查可以用于真实项目；发现记录不完整时报告，不自动修订历史数据。

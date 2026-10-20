@@ -1,0 +1,11 @@
+{
+  "work_id": "sample-work-01",
+  "role": "sample-character",
+  "content": "收到礼物后发现小惊喜",
+  "project": "./my-existing-project",
+  "brief": "竖屏短片，角色与声音以本地采用素材为准；预算和平台选择见项目BRIEF.md",
+  "references": [
+    {"asset": "./assets/character.png", "responsibility": "锁定身份和比例，不固定表情与姿势"},
+    {"asset": "./assets/reference.mp4", "responsibility": "本次采用的动作顺序和镜头节奏"}
+  ]
+}

@@ -1,6 +1,6 @@
-# Hypit + Haiyi workflow repository
+# KoroFlow workflow repository
 
-For video-production requests, read `skills/hypit-haiyi/SKILL.md` and use the unified Haiyi generation / Hypit composition workflow unless the user chooses another tool. Local paths are in `.local/config.json`; never assume the checkout path from a prior conversation.
+For complete video workflows, read `skills/koroflow/SKILL.md`. Preserve the user's chosen production/publishing platforms and local quality rules. Haiyi/Hypit is an existing adapter, documented in `skills/hypit-haiyi/SKILL.md`; the local generic core is `scripts/koroflow.py`. Core records do not invoke platforms. Do not create a false connector or claim a configured descriptor proves live connectivity. Local paths remain in ignored configuration.
 
 Keep video projects separate from the tool and Provider installation. Use `scripts/workflow.mjs init` for new projects. Never replace an existing production with the demo prompt.
 
@@ -13,3 +13,5 @@ Preserve upstream attribution and terms from `NOTICE.md` and `third-party/HYPIT-
 For delivery records, production counts or publication planning, read `skills/koro-operations/SKILL.md`. Its Python CLI performs offline checks only. Run `python -X utf8 -m unittest discover -s tests -p "test_*.py" -v` after changing operations or packaging; use an available Python 3.11+ interpreter. Keep production-target and publishing-account registries separate. Preserve manual ledger fields by stable IDs and distinguish proposed plans, confirmed schedules and verified platform publications.
 
 The plugin uses root `plugin.json` and a repo catalog at `.agents/plugins/marketplace.json`. Source bundles must retain the explicit allowlist in `scripts/bundle.mjs`; never bundle whole local skill folders containing generated path indexes or runtime caches. Do not add local account records, device addresses, customer files or evidence screenshots to public examples.
+
+The core journal lives in user workspaces under `.koroflow`, never in source distribution. Quality reviews bind actual file hashes; revisions preserve work_id and first delivery date. Use isolated temporary workspaces in tests. `bridge` exports only actual core events to the existing project format; it never refreshes Excel or fabricates successful platform jobs. Existing projects need explicit legacy import, not re-registration as new works. Keep prepared/submitted/unknown/scheduled/published states distinct and preserve unknown outcomes before retries.

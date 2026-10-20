@@ -44,6 +44,16 @@ class DistributionTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(config.read_text(encoding="utf-8"))["format"], "koro.operations@1")
 
+    def test_core_only_install_is_self_contained_and_preserves_other_skills(self):
+        self.node(ROOT / "scripts/workflow.mjs", "install-skill", "--core-only")
+        skill = self.root / "codex/skills/koroflow"
+        workspace = self.root / "workspace"
+        call = subprocess.run([sys.executable, "-X", "utf8", str(skill / "scripts/workflow.py"),
+            "--workspace", str(workspace), "init"], capture_output=True, text=True, encoding="utf-8")
+        self.assertEqual(call.returncode, 0, call.stderr)
+        self.assertTrue(json.loads(call.stdout)["initialized"])
+        self.assertFalse((self.root / "codex/skills/hypit").exists())
+
     def test_source_zip_contains_plugin_and_runs_after_extraction(self):
         archive = self.root / "bundle.zip"
         self.node(ROOT / "scripts/bundle.mjs", archive)
@@ -54,7 +64,7 @@ class DistributionTest(unittest.TestCase):
             self.assertTrue(any(n.endswith("/.agents/plugins/marketplace.json") for n in names))
             for name in names:
                 parts = Path(name).parts
-                self.assertFalse({".local", "node_modules", "__pycache__", ".git", ".hypit"}.intersection(parts), name)
+                self.assertFalse({".local", "node_modules", "__pycache__", ".git", ".hypit", ".koroflow"}.intersection(parts), name)
                 self.assertFalse(name.endswith(("local-setup.json", ".pyc", ".mp4", ".wav", "tokens.json")), name)
             z.extractall(self.root / "unpacked")
         extracted = self.root / "unpacked/hypit-haiyi-workflow"
@@ -70,6 +80,11 @@ class DistributionTest(unittest.TestCase):
                                 capture_output=True, text=True, encoding="utf-8")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("plan", result.stdout)
+        self.node(extracted / "scripts/workflow.mjs", "install-skill", "--core-only", cwd=extracted)
+        call = subprocess.run([sys.executable, "-X", "utf8", str(extracted / "scripts/koroflow.py"),
+            "--workspace", str(self.root / "workspace"), "init"], capture_output=True, text=True, encoding="utf-8")
+        self.assertEqual(call.returncode, 0, call.stderr)
+        self.assertTrue(json.loads(call.stdout)["initialized"])
 
 
 if __name__ == "__main__":

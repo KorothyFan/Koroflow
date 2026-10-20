@@ -1,4 +1,4 @@
-name: Operations checks
+name: KoroFlow offline checks
 on:
   push:
   pull_request:

@@ -1,0 +1,40 @@
+{
+  "quality": {
+    "required_checks": ["brief_alignment", "visual_continuity", "audio_and_sync", "clean_output", "technical_integrity"],
+    "descriptions": {
+      "brief_alignment": "剧情、镜头、角色身份和比例符合本次采用的制作方案",
+      "visual_continuity": "实际完整视频的动作接触、遮挡恢复和表情连续性已检查",
+      "audio_and_sync": "实际音轨、完整发声、情绪、口型及距离关系已检查；无音频作品记录不适用原因",
+      "clean_output": "字幕、文字、水印、片头片尾符合本次明确要求",
+      "technical_integrity": "真正交付文件可播放，时长、画幅、编码与电平符合要求"
+    }
+  },
+  "targets": {"weekday": {}, "weekend": {}, "date_overrides": {}},
+  "adapters": [
+    {
+      "id": "haiyi-hypit", "transport": "api", "status": "implemented",
+      "operations": {
+        "video.generate": {"capabilities": ["reference_image", "reference_video", "reference_audio", "boundary_frames", "native_audio"], "handoff": "hypit-haiyi: scripts/workflow.mjs check/plan/pricing/build; Seedance 2.5 only; existing local setup and authorization required"},
+        "image.generate": {"capabilities": ["reference_image"], "handoff": "hypit-haiyi: GPT Image Provider; existing local setup and authorization required"}
+      }
+    },
+    {
+      "id": "haiyi-skill", "transport": "api", "status": "external",
+      "operations": {
+        "video.edit": {"capabilities": ["source_edit", "reference_image", "reference_audio", "native_audio"], "handoff": "haiyi-aigc: query current model-info, then explicit upload/generate; preserve task receipt before any retry"},
+        "audio.generate": {"capabilities": ["reference_audio"], "handoff": "haiyi-aigc: query current available audio model and its actual constraints"}
+      }
+    },
+    {
+      "id": "hypit-local", "transport": "cli", "status": "implemented",
+      "operations": {"video.compose": {"capabilities": ["timeline", "audio_tracks", "render"], "handoff": "hypit: compose and render through an existing configured local Runtime"}}
+    },
+    {
+      "id": "manual-publication", "transport": "manual", "status": "manual",
+      "operations": {
+        "publication.publish": {"capabilities": ["title", "hashtags", "cover"], "handoff": "Operator uses the selected account and delivered SHA256; record actual publication ID and evidence"},
+        "publication.schedule": {"capabilities": ["title", "hashtags", "cover", "scheduled_at"], "handoff": "Operator verifies platform timezone and scheduled-list evidence; scheduled is distinct from published"}
+      }
+    }
+  ]
+}
