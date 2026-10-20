@@ -1,4 +1,4 @@
-# Hypit + 海艺视频工坊
+# Koroflow · AI 视频生产与运营工作流
 
 统一的 Codex 视频生产技能和代码库：导演与剧本模块负责前期创作，海艺负责图片/视频素材生成，Hypit 负责分镜、时间线、素材复用和成片渲染。已安装的两个基础插件可以保留；从 `$hypit-haiyi` 统一进入工作流。
 
@@ -109,8 +109,8 @@ Hypit 原技能已有 Brief/Treatment、脚本与语义时间、图像/视频导
 需要 Node.js >=22.15。已有 Hypit 和 FFmpeg 时：
 
 ```powershell
-git clone https://github.com/KorothyFan/hypit-haiyi-workflow.git
-cd hypit-haiyi-workflow
+git clone https://github.com/KorothyFan/Koroflow.git
+cd Koroflow
 node scripts/workflow.mjs setup --hypit-root "D:/tools/hypit" --ffmpeg "D:/tools/ffmpeg/bin/ffmpeg.exe" --ffprobe "D:/tools/ffmpeg/bin/ffprobe.exe"
 node scripts/workflow.mjs install-skill
 node scripts/workflow.mjs info
@@ -160,9 +160,9 @@ verify 编译 Provider、运行 mock tests，在临时独立项目里检查图�
 
 ## GitHub 代码库
 
-公开源码：[KorothyFan/hypit-haiyi-workflow](https://github.com/KorothyFan/hypit-haiyi-workflow)。
+公开源码：[KorothyFan/Koroflow](https://github.com/KorothyFan/Koroflow)。
 
-已发布源码与技能包：[v0.5.0 预览版本](https://github.com/KorothyFan/hypit-haiyi-workflow/releases/tag/v0.5.0)。此版本吸收 MiniMax 提示词方法用于 Seedance，并说明可选 H3 技能/海艺路径；本地安装与 mock/plan 验证通过，H3 配置只做了只读查询，尚未执行真实付费生成或角色替换成片验证。0.6.0管理模块的源码和插件结构见当前分支，是否已发布新Release以GitHub实际记录为准。
+已发布源码与技能包：[v0.5.0 预览版本](https://github.com/KorothyFan/Koroflow/releases/tag/v0.5.0)。此版本吸收 MiniMax 提示词方法用于 Seedance，并说明可选 H3 技能/海艺路径；本地安装与 mock/plan 验证通过，H3 配置只做了只读查询，尚未执行真实付费生成或角色替换成片验证。0.6.0管理模块的源码和插件结构见当前分支，是否已发布新Release以GitHub实际记录为准。
 
 代码库包含源码、技能、模板、安装脚本和来源说明。本机配置、运行时数据库与账号凭据均不上传；安装脚本也不会发布 GitHub 仓库或插件市场条目。这里提供本地统一 Skill 入口，原基础插件保留。
 

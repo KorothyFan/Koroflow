@@ -45,7 +45,7 @@ python -X utf8 scripts/operations.py plan --config .local/operations.json --requ
 可用支持插件市场的客户端注册本仓库：
 
 ```text
-codex plugin marketplace add KorothyFan/hypit-haiyi-workflow
+codex plugin marketplace add KorothyFan/Koroflow
 codex plugin add koro-workflow@koro-workflow-plugins
 ```
 

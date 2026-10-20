@@ -4,7 +4,7 @@
   "version": "0.6.0",
   "description": "AI video production, delivery records, statistics and offline publishing preflight, with Hypit and Haiyi integration.",
   "author": { "name": "KorothyFan" },
-  "repository": "https://github.com/KorothyFan/hypit-haiyi-workflow",
+  "repository": "https://github.com/KorothyFan/Koroflow",
   "keywords": ["video", "production", "operations", "publishing"],
   "extensions": {
     "com.openai": {
