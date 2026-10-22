@@ -1,5 +1,7 @@
 # KoroFlow workflow repository
 
+For production planning and paid submission, read `skills/koroflow/references/production-standard.md`. Present a concrete plan, exact model tier and parameters, inputs, real-time estimated costs and authorization scope before paid submission unless that exact scope is already explicitly authorized. Use `templates/production-confirmation.md` for the reviewable handoff. The confirmation is an operator workflow, not a claimed programmatic budget lock. Keep local role/account/target settings separate from portable defaults.
+
 For complete video workflows, read `skills/koroflow/SKILL.md`. Preserve the user's chosen production/publishing platforms and local quality rules. Haiyi/Hypit is an existing adapter, documented in `skills/hypit-haiyi/SKILL.md`; the local generic core is `scripts/koroflow.py`. Core records do not invoke platforms. Do not create a false connector or claim a configured descriptor proves live connectivity. Local paths remain in ignored configuration.
 
 Keep video projects separate from the tool and Provider installation. Use `scripts/workflow.mjs init` for new projects. Never replace an existing production with the demo prompt.

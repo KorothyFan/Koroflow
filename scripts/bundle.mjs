@@ -14,7 +14,7 @@ const entries = ['README.md', 'NOTICE.md', 'AGENTS.md', 'package.json', '.gitign
   'schemas/work.schema.json', 'schemas/adapter.schema.json',
   'skills/koroflow/SKILL.md', 'skills/koroflow/agents/openai.yaml',
   'skills/koroflow/references/defaults.json', 'skills/koroflow/references/adapters.md',
-  'skills/koroflow/references/workflow.md', 'skills/koroflow/scripts/workflow.py',
+  'skills/koroflow/references/workflow.md', 'skills/koroflow/references/production-standard.md', 'skills/koroflow/scripts/workflow.py',
   'skills/koroflow/assets/templates/work.example.json', 'skills/koroflow/assets/templates/review.example.json',
   'skills/koroflow/assets/templates/adapter.example.json',
   'skills/koroflow/scripts/koroflow_core/__init__.py', 'skills/koroflow/scripts/koroflow_core/core.py',
