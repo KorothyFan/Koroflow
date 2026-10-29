@@ -24,6 +24,7 @@ const entries = ['README.md', 'NOTICE.md', 'AGENTS.md', 'package.json', '.gitign
   'skills/koroflow/references/production-paths/sequential-comic.md',
   'skills/koroflow/references/production-paths/intake-and-compilation.md',
   'skills/koroflow/assets/templates/work.example.json', 'skills/koroflow/assets/templates/review.example.json',
+  'skills/koroflow/assets/templates/path-experience.md',
   'skills/koroflow/assets/templates/adapter.example.json',
   'skills/koroflow/scripts/koroflow_core/__init__.py', 'skills/koroflow/scripts/koroflow_core/core.py',
   'skills/koro-operations/SKILL.md', 'skills/koro-operations/agents/openai.yaml',
