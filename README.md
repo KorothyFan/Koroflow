@@ -1,60 +1,110 @@
-# KoroFlow · 可复用的视频生产与运营工作流
+# KoroFlow
 
-将**质量规范 → 创作与制作 → 检查与修订 → 整理交付 → 每日统计 → 发布与回填**连成一套可复用流程。每个独立作品有稳定的 `work_id`；跨平台生成、改声音、换版本、重新交付都沿用它。
+**把内容策划、AI 制作、质量检查、版本交付和发布运营，整理成可以持续复用的工作流。**
 
-制作平台可以是海艺、无限画布或其他生成服务；发布可以通过实际可用的 API、MCP、浏览器或人工执行。KoroFlow 保存素材职责、文件指纹、质量结果、任务证据和状态，平台执行通过适配器交接。现有海艺 / Hypit 路径保留。
+KoroFlow 面向需要持续制作角色短视频、参考复刻和图文内容的创作者与团队。从理解参考素材，到选择生成方式、修订画面和声音，再到整理库存与准备发布，每个环节都保留明确的要求、版本和执行依据，方便在不同任务或工具之间接着做。
 
-当前版本为 **v0.7.0 预览版**。下载源码与技能包、查看安装说明见 [v0.7.0 Release](https://github.com/KorothyFan/Koroflow/releases/tag/v0.7.0)。旧版本附件不会自动更新，新功能请下载对应版本。
+项目提供 Codex 技能、本地记录工具、制作规范和可扩展的平台交接方式。现有制作适配器连接海艺与 Hypit；使用其他生成平台、无限画布或发布工具时，也可以沿用作品、素材和交付记录，另外接入实际可用的执行工具。
 
-## 当前能做什么
+[快速开始](#快速开始) · [制作路径](#按不同制作路径使用) · [能力边界](#目前实现到哪一步) · [详细文档](#文档导航)
 
-| 环节 | 当前实现 | 使用边界 |
+## 一套工作流怎样使用
+
+一个典型的项目会经过以下环节：
+
+1. **明确内容**：分析参考片或整理原创想法，确定角色、剧情、镜头、声音，以及本次要保留和改变的内容。
+2. **选择制作路径**：根据目标决定直接编辑原片、依据参考重建，还是先做场景图再生成视频。需要保留原声、另做配音或制作漫画时，使用对应的方法。
+3. **准备并执行**：核对实际附件、模型版本与价档、输出参数和预计消耗，在用户委托的范围内调用已连接的平台，保存任务回执。
+4. **检查与修订**：对照方案看画面、听声音，检查角色、动作、接触、表情与口型。保留原生输出和历史版本，明确哪些问题已经解决、哪些仍未确认。
+5. **交付与运营**：选择正式版本，准备英文标题和标签，整理库存与统计。发布前核对账号、文件和历史，通过实际发布工具执行，再保存结果与回填记录。
+
+每个独立作品使用稳定的作品编号 `work_id`。同一作品换声音、改画面或重新交付时沿用原编号，避免把多个修订误算成多条产出。成功生成、独立交付和用户确认采用分别记录。
+
+可以这样开始一个任务：
+
+> 使用 $koroflow，参考这段视频，把主角换成我提供的角色，保留剧情、镜头和原声。先分析适合的制作路径，暂不生成。
+
+也可以只调用其中一个环节，例如写分镜、检查已有作品，或者为已交付视频准备发布文案。实际生成和发布按照明确的委托范围执行；阅读文档或安装技能不会自动启动任务。
+
+## 按不同制作路径使用
+
+同样是“做一个视频”，具体方法可能很不同。KoroFlow 按路径保存经验，让每种方法保留自己的适用条件。
+
+| 制作路径 | 适合的情况 | 重点 |
 | --- | --- | --- |
-| 导演与制作规范 | Brief、分镜、角色/声音映射、参考职责及质量清单 | 沿用用户当前规范；严格复刻不改写原剧情 |
-| 制作 | 海艺图片/视频 Provider、Hypit 编排与本地渲染 | 需要相应工具、账号与额度；编辑/音频可通过海艺原技能交接 |
-| 版本与质量 | SHA256 绑定修订及检查记录，未完成必检项阻止交付 | 检查结果来自真实人工或工具检查，核心不会自动看画面或听声音 |
-| 整理与统计 | 独立作品、首交付日、生成/交付/采用分开；本地事件日志 | 不由文件存在推断交付，不把修订重复算产量 |
-| 兼容原工程 | 旧记录预检、显式导入、幂等导出统计事件及发布信息 | 不搬迁原工程；原 Excel 仍由既有刷新器维护，手填字段不改动 |
-| 发布 | 账号与历史预检、文件/请求固定、本地任务占用、状态与证据记录 | 尚无内置社交平台发布执行器；准备任务不代表上传成功 |
-| 扩展平台 | API / MCP / browser / CLI / manual 的能力声明与交接契约 | 新平台需配置并验证真实执行工具；声明能力不代表已经接通 |
+| [A · 原视频参考／编辑](skills/koroflow/references/production-paths/source-video-edit.md) | 希望保留原片剧情、动作和镜头，只改变指定元素 | 真实视频参考、角色映射、动作时序与接触关系 |
+| [B · 解读复写](skills/koroflow/references/production-paths/reference-rebuild.md) | 不上传原片，根据已理解的剧情与表达重建 | 分清参考事实与本次改编，明确重建的取舍 |
+| [C · 场景资产驱动视频](skills/koroflow/references/production-paths/scene-to-video.md) | 先确定新空间、立体风格或原创画面，再生成动作 | 分阶段确认身份、场景、动作空间和连续性 |
+| [D · 只改画面，保留原音轨](skills/koroflow/references/production-paths/visual-only-audio-preserve.md) | 原声已经合适，只需要修订形象或背景 | 原音轨复用、时间匹配、原生版与本地处理版区分 |
+| [E · 独立声音修订](skills/koroflow/references/production-paths/audio-repair.md) | 需要调整音色、情绪或另做配音 | 完整发声回合、表演、声音空间与音画同步 |
+| [F · 连续图文漫画](skills/koroflow/references/production-paths/sequential-comic.md) | 制作多页角色故事与轮播内容 | 跨页身份和道具连续性、对白、分页与交付校验 |
+| [G · 外部成片与合集](skills/koroflow/references/production-paths/intake-and-compilation.md) | 接收外包或用户成片，整理库存，或编排合集 | 来源、采用版本、父片段关系与去重 |
 
-同一账号的同一作品或相同文件已有占用时，核心阻止重复分配；提交结果未知时保留 `result_unknown`，先核实远程结果。`prepared`、`submitted`、`scheduled` 和 `published` 分别记录，发布状态也不自动冒充用户采用。
+这些路径可以组合。例如“编辑原视频并保留原声”采用 `A + D`；“先做新场景，再单独配音”可以采用 `C + E`。字母是文档检索标识，不是命令参数。
+
+某个参考素材的时长、切点、笑点和特殊对白仍保存在它自己的项目中，不会因为一次效果不错就变成所有作品的默认要求。路径选择与适用范围见[制作路径总览](skills/koroflow/references/production-paths.md)；新经验可用[路径经验模板](templates/path-experience.md)记录。
 
 ## 四个技能如何配合
 
-完整制片流程见 [视频制作规范（完整版）](skills/koroflow/references/production-standard.md)，提交付费生成前使用 [方案、参数与消耗确认单](templates/production-confirmation.md)。规范包括参考复刻、解读复写、2D转3D场景再生成视频、授权与重试、实际审片、版本交付和统计；角色偏好是可替换示例，账号与每日目标保留在使用者本地。提交确认目前由操作者执行，不代表代码已有统一预算审批或自动费用拦截。
+| 技能 | 负责什么 | 什么时候使用 |
+| --- | --- | --- |
+| `koroflow` | 统筹需求、路径、制作、检查、交付和运营 | 开始完整项目，或接续已有工作 |
+| `video-director` | 剧本、分镜、参考片拆解与角色替换方案 | 需要先把内容和镜头想清楚 |
+| `hypit-haiyi` | 海艺生成与 Hypit 编排、渲染的具体交接 | 已选择海艺／Hypit 制作路径 |
+| `koro-operations` | 核对既有工程、统计快照、账号与发布历史 | 整理作品、核对库存或准备发布 |
 
-| 技能 | 职责 |
-| --- | --- |
-| `koroflow` | 统一入口，协调规范、平台选择、制作、检查、交付、统计与发布 |
-| `video-director` | 剧本、分镜、参考片拆解与角色替换方案 |
-| `hypit-haiyi` | 海艺 / Hypit 的具体制作路径 |
-| `koro-operations` | 读取既有工程、账号及统计快照，发布前核对历史 |
+只做剧本时可以直接使用 `$video-director`；完整项目通常从 `$koroflow` 进入，再按需要调用其他技能。各技能按职责配合，不要求每个小任务走完所有环节。
 
-新任务可以说：“使用 `$koroflow`，按我的制作规范推进这个视频。”指定其他平台时保留选择，不自动切回海艺。只做前期文字方案不会提交媒体生成。
+## 目前实现到哪一步
 
-## 先安装独立工作流核心
+KoroFlow 包含三部分，它们各自承担不同的工作：
 
-需要 Node.js ≥22.15 安装技能、Python ≥3.11 运行本地记录核心。Windows Python 如缺 IANA 时区数据，安装 `tzdata`。这一部分无需 Hypit、海艺账号或 FFmpeg。
+- **技能与制作规范**：指导助手分析素材、写方案、选择路径、检查结果和交接任务。完整音画质量仍需实际观看与听审，文档和技术检查不能替代审片。
+- **本地记录核心**：保存作品、素材职责、文件 SHA256、修订、检查结果和任务状态。交付时检查必检项；保存发布占用和未知结果，帮助避免重复分配或重复提交。
+- **平台执行工具**：现有海艺 Provider 支持图片／视频 API，Hypit 负责相应编排与本地渲染。其他生成、编辑、音频及发布能力，需要通过已验证的工具或接口接入。
+
+本地核心的 `route` 和 `prepare` 用于核对能力、准备交接和保存记录，本身不调用外部平台。仓库尚未内置通用社交平台发布执行器，也不附带原有 Excel 刷新器；可以与使用者现有的发布工具、台账和整理脚本衔接。
+
+参考编辑是否能严格保留动作、模型是否支持声音控制，以及某个平台当前是否连通，都需要针对实际服务验证。整合流程可以改善约束、复用和检查方式，不能保证模型画质提升或逐帧复刻成功。
+
+## 快速开始
+
+### 1. 获取代码并安装需要的技能
+
+使用 Git、Node.js ≥22.15；运行本地记录核心另需 Python ≥3.11。Windows Python 如果缺少 IANA 时区数据，可安装 `tzdata`。
 
 ```powershell
 git clone https://github.com/KorothyFan/Koroflow.git
 cd Koroflow
 node scripts/workflow.mjs install-skill --core-only
-python -X utf8 scripts/koroflow.py --workspace "D:/videos" init
-python -X utf8 scripts/koroflow.py --workspace "D:/videos" adapters
+```
+
+这会安装独立的 `koroflow` 技能，不要求先准备 Hypit、FFmpeg 或生成账号。只需要导演或运营技能时，可以分别运行：
+
+```powershell
+node scripts/workflow.mjs install-skill --director-only
+node scripts/workflow.mjs install-skill --operations-only
+```
+
+### 2. 使用本地记录核心
+
+以下工作空间路径为示例，请替换为自己的目录。`init` 创建本地配置，不搬迁已有素材，也不覆盖已初始化的工作空间。
+
+```powershell
+python -X utf8 scripts/koroflow.py --workspace "D:/my-video-workspace" init
+python -X utf8 scripts/koroflow.py --workspace "D:/my-video-workspace" adapters
 python -X utf8 scripts/koroflow.py --help
 ```
 
-`init` 在指定工作空间创建 `.koroflow`，保存本地配置与 UUID 事件，不搬迁素材或视频工程。已有工作空间拒绝覆盖。按本地需求编辑其中的 `quality.json`、`targets.json` 和 `adapters.json`；公开示例不预填私人账号或每日目标。
+工作空间的 `.koroflow` 保存配置和事件记录，其中 `quality.json`、`targets.json`、`adapters.json` 分别配置质量检查、制作目标和平台能力。角色资产、账号、时区和临时安排按使用者的实际情况设置。
 
-新作品先在独立工程目录准备 Brief 和素材，用 [作品清单](skills/koroflow/assets/templates/work.example.json) 填写真实路径、角色及参考职责，再 `create --manifest`。输出用 `register` 登记版本，实际检查后 `review`，满足必检项才能 `deliver`；`report --date` 查看该核心日志覆盖的统计。完整命令与旧工程衔接见 [工作流使用说明](skills/koroflow/references/workflow.md)。
+新作品可从[作品清单模板](skills/koroflow/assets/templates/work.example.json)开始：登记作品与参考，保存真实任务，选定输出版本，实际检查后再交付。完整命令见[核心记录与执行](skills/koroflow/references/workflow.md)。已有工程可以先核对旧记录，需要时显式导入，保留原作品编号和首次交付日，不必重新建成新作。
 
-已有工程继续由原管理工具读取。需要纳入核心时先生成 `operations check --hash` 报告，再显式 `import-legacy`，保持原编号和首交付日期；不能重新登记为当天的新作品。历史只有成片、没有工程的文件继续由原台账管理。
+### 3. 需要海艺／Hypit 制作时再配置
 
-## 接上海艺 / Hypit 制作
+本仓库包含整合技能、Provider 和配置脚本。完整 Hypit 工具、海艺原 Skill、账号与生成额度需要另外准备。
 
-本仓库提供整合技能、Provider 和安装脚本，**不包含完整 Hypit 工具、海艺原 Skill、离线模型、账号或额度**。
+已有 `upstream.json` 固定版本的 Hypit 和媒体工具时：
 
 ```powershell
 node scripts/workflow.mjs setup --hypit-root "D:/tools/hypit" --ffmpeg "D:/tools/ffmpeg/bin/ffmpeg.exe" --ffprobe "D:/tools/ffmpeg/bin/ffprobe.exe"
@@ -62,25 +112,55 @@ node scripts/workflow.mjs install-skill
 node scripts/workflow.mjs info
 ```
 
-没有 Hypit 时可用 `setup --install` 下载 `upstream.json` 固定版本；还需 Git、pnpm 及本地媒体依赖。默认 `install-skill` 安装上面的四个技能，并按原逻辑准备 Hypit 技能；海艺原 Skill 仍从其提供渠道单独安装。只用 Provider 已支持的图片/视频接口且已有有效 Token 时，可以不安装海艺原 Skill；登录、音频、音乐或其他补充能力可能需要它。
+没有 Hypit 时可使用 `setup --install` 下载 `upstream.json` 固定的版本并安装依赖；这一步另需 Git、pnpm 10.33.0，以及 FFmpeg／FFprobe 等运行依赖。完整 `install-skill` 会安装四个 KoroFlow 技能，并补装缺失的 Hypit 原技能。
 
-`HAIYI_API_TOKEN` 或海艺原技能的登录凭据留在本机。提交前通过原制作工具检查参数、模型、价格与授权范围；`build` 会提交真实付费任务。详情见 [海艺 / Hypit 安装与制作](docs/haiyi-hypit.md)。整合改善流程与检查，不改变模型基础画质，也不保证严格复刻必然成功。
+海艺原技能 `haiyi-aigc` 从其提供渠道单独安装。已持有效 Token、仅使用 Provider 支持的图片／视频接口时，可以不依赖它；需要其登录、语音、音乐或增强等功能时，再按对应说明安装。凭据保存在本机，可使用 `HAIYI_API_TOKEN` 或海艺原技能已保存的登录授权。
 
-## 添加其他制作和发布平台
+详细依赖、费用说明与操作步骤见[海艺／Hypit 制作适配器](docs/haiyi-hypit.md)。云端任务按实际平台、模型和额度计费，安装本仓库不提供免费生成额度。参数与费用预检后，在已授权范围内执行；`build` 会提交真实生成任务。
 
-复制 [适配器示例](skills/koroflow/assets/templates/adapter.example.json) 到工作空间 `adapters.json`，填写能力与实际交接方式。接入顺序：核实真实 API/MCP/浏览器工具 → 配置凭据于本机 → 验证输入输出和任务查询 → 声明已验证能力 → 按真实回执登记任务。未配置平台不参与路由，缺少所需能力时不会偷偷降级或改模型。
+## 使用自己的平台与整理方式
 
-本地核心的 `route` 与 `prepare` 只检查并保存交接记录，**不会执行网络请求**。现有真实生成由海艺/Hypit 工具执行，新制作平台与发布平台也需各自执行器。不要把适配器 JSON 里的 `external` 或 `implemented` 状态当成实时登录/连接证明。见 [适配器契约](skills/koroflow/references/adapters.md) 与 [架构与边界](docs/architecture.md)。
+制作平台和发布平台分别配置。接入新服务时，先确认实际可用的 API、MCP、浏览器、CLI 或人工操作方式，验证输入输出和任务查询，再用[适配器模板](skills/koroflow/assets/templates/adapter.example.json)描述能力与交接方式。填写配置并不代表服务已经接通。
 
-原账号/设备工具和统计刷新器可以继续使用。[运营模块](docs/operations.md) 的 `plan` 核对已有完整历史，核心 `prepare` 再保存新任务占用；两者配合，不能只查新日志就忽略旧发布记录。
+已有项目、台账和统计工具可以继续使用：`koro-operations` 负责读取和预检，核心可显式导入旧作品并通过 `bridge` 导出兼容事件。核心自身的报表只覆盖其日志，不冒充已有工程的全量统计；Excel 手工字段仍通过原有刷新机制按稳定编号保留。
 
-## 配置、隐私与分发
+发布时保留准备、提交、预约、完成和结果未知的区别。用户确认、平台回执与台账展示可以有不同依据，记录时分别说明。制作授权不自动包含发布授权；结果未知先查原任务，不能直接重复提交。
 
-源码、工具安装、公共资产、每条视频工程和本地记录分开。`.local` 保存本机工具路径，用户工作空间的 `.koroflow` 保存工作记录；凭据、账号注册表、设备信息、素材、成片及本机路径索引不进入 Git 或源码 ZIP。安装技能不会迁移生产数据，也不会启动历史任务。
+## 文件与数据放在哪里
 
-插件目录采用根 `plugin.json` 和 `.agents/plugins/marketplace.json`。`scripts/bundle.mjs` 按白名单生成源码与技能 ZIP；为兼容，压缩包内顶层目录仍叫 `hypit-haiyi-workflow`。单独安装导演或运营技能仍支持 `--director-only` / `--operations-only`。
+```text
+Koroflow/                 本仓库：可分享的技能、规范、模板和工具
+  skills/                 四个技能及对应参考资料
+  templates/              制作确认、复刻委托和路径经验模板
+  scripts/                安装、记录、预检和打包入口
+  packages/provider-haiyi/ 海艺制作适配器
+  docs/                   架构、运营和依赖说明
 
-## 开发验证
+自己的工作空间/           个人资产、视频工程和真实运行记录
+  .koroflow/              本地核心配置与事件
+  作品工程/               Brief、分镜、输入素材、任务与交付版本
+```
+
+仓库 `.local` 仅保存本机工具配置。凭据、账号设备清单、私人素材、运行日志和本机路径索引不进入 Git 或源码包；原文案例可在自己的项目中保留，公开部分只沉淀可迁移的方法。
+
+## 文档导航
+
+| 想了解什么 | 从这里开始 |
+| --- | --- |
+| 一条作品怎样制作、检查和交付 | [完整制作规范](skills/koroflow/references/production-standard.md) |
+| 不同素材该采用什么方法 | [制作路径与经验](skills/koroflow/references/production-paths.md) |
+| 记录本次方案、附件、参数和费用 | [提交确认单](templates/production-confirmation.md) |
+| 给出多角色、多版本复刻委托 | [复刻委托模板](templates/replication-brief.md) |
+| 本地核心命令、旧工程接续 | [核心记录与执行](skills/koroflow/references/workflow.md) |
+| 既有统计、账号和发布预检 | [运营模块](docs/operations.md) |
+| 海艺、Hypit 与可选 H3 技能的关系 | [制作适配器说明](docs/haiyi-hypit.md) |
+| 接其他平台和发布工具 | [适配器契约](skills/koroflow/references/adapters.md) · [架构说明](docs/architecture.md) |
+
+## 版本、开发与来源
+
+已发布下载包为 [v0.7.0 预览版](https://github.com/KorothyFan/Koroflow/releases/tag/v0.7.0)。`main` 还包含后续文档与制作路径更新；需要最新内容时使用 `main`，固定版本的 Release 附件不会随源码提交自动变化。更新记录见 [CHANGELOG](CHANGELOG.md)。
+
+开发验证：
 
 ```powershell
 python -X utf8 -m unittest discover -s tests -p "test_*.py" -v
@@ -88,6 +168,6 @@ node scripts/workflow.mjs verify
 node scripts/bundle.mjs
 ```
 
-Python 测试在临时工作空间验证质量门槛、修订/统计、未知任务、发布查重、旧记录兼容及独立安装/ZIP。`verify` 编译 Provider、运行离线 mock，并检查固定版 Hypit 的 Source 与 plan；不提交付费任务，不证明云端实时可用或成片质量。当前以 Windows 环境验证，macOS/Linux 未实机验证。
+Python 测试与源码打包已配置 Windows／Linux CI；`verify` 另检查已准备好的 Hypit 与 Provider，执行离线 mock 和 Source／plan 验证。它们不提交付费生成，也不证明真实平台连接、音画质量或发布成功。源码包按白名单构建，为兼容保留顶层目录名 `hypit-haiyi-workflow`。插件入口为 `plugin.json` 和 `.agents/plugins/marketplace.json`。
 
-变更见 [CHANGELOG](CHANGELOG.md)。Hypit 上游是 [hypit-ai/hypit](https://github.com/hypit-ai/hypit)，固定版本见 `upstream.json`；许可证原文与附加条件见 [HYPIT-LICENSE](third-party/HYPIT-LICENSE)，归属见 [NOTICE.md](NOTICE.md)。本仓库不重新授权 Hypit 或各平台服务，不是官方联合插件。
+Hypit 上游为 [hypit-ai/hypit](https://github.com/hypit-ai/hypit)，固定版本见 `upstream.json`。归属与适用范围见 [NOTICE](NOTICE.md)，上游许可证见 [HYPIT-LICENSE](third-party/HYPIT-LICENSE)。KoroFlow 是独立的工作流整合项目，上游工具与平台服务仍适用各自条款。
