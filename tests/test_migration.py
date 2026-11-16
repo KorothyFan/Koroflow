@@ -78,6 +78,78 @@ class MigrationTest(unittest.TestCase):
         self.assets['assets'][0]['path'] = '../outside.bin'
         self.assertFalse(self.check()['ok'])
 
+    def test_shared_policy_checks_saved_payload_without_freezing_duration(self):
+        shared = self.root / 'default.json'
+        shared.write_text(json.dumps({'policy': {'require_native_audio': True, 'aspect_ratio': '9:16'}}))
+        self.config.pop('policy')
+        self.config['policy_from'] = shared.name
+        payload = self.request.pop('payload')
+        parameters = payload['parameters']
+        parameters.update(aspectRatio='9:16', duration=-1)
+        self.request['payload_file'] = 'actual-request.json'
+        actual = self.root / self.request['payload_file']
+        actual.write_text(json.dumps(payload))
+        approved = self.check()
+        self.assertTrue(approved['ok'], approved)
+        parameters.update(aspectRatio='16:9', duration=4)
+        actual.write_text(json.dumps(payload))
+        rejected = self.check()
+        self.assertFalse(rejected['ok'])
+        self.assertNotEqual(approved['payload_sha256'], rejected['payload_sha256'])
+        self.request['aspect_ratio_exception'] = {'value': '16:9', 'basis': 'Current brief explicitly asks for landscape'}
+        self.request['expected_parameters'] = {'duration': 4}
+        self.assertTrue(self.check()['ok'])
+        self.request['expected_parameters']['duration'] = -1
+        self.assertFalse(self.check()['ok'])
+
+    def test_recreation_checks_opening_review_and_each_actual_wire_slot(self):
+        self.config['policy'].update(require_full_replacement_image=True, require_upload_binding=True)
+        self.request.update(intent='recreation', reference_kind='video')
+        parameters = self.request['payload']['parameters']
+        parameters.update(prompt='按视频1重建动作，图1控制外观，音频1仅作声音参考。',
+                          video=['https://example.invalid/source'], audio=['https://example.invalid/voice'])
+        opening = self.root / 'opening.png'
+        opening.write_bytes(b'checked replacement opening fixture')
+        source = self.root / 'source.mp4'
+        source.write_bytes(b'source motion fixture')
+        voice = self.root / 'voice.wav'
+        voice.write_bytes(b'voice reference fixture')
+        self.request['bindings'] = [
+            {'label': '图片1', 'field': 'images[0]', 'path': opening.name, 'sha256': m.digest(opening),
+             'uploaded_url': parameters['images'][0], 'purpose': 'replacement_opening', 'review_file': 'opening-review.json'},
+            {'label': '视频1', 'field': 'video[0]', 'path': source.name, 'sha256': m.digest(source),
+             'uploaded_url': parameters['video'][0]},
+            {'label': '音频1', 'field': 'audio[0]', 'path': voice.name, 'sha256': m.digest(voice),
+             'uploaded_url': parameters['audio'][0]},
+        ]
+        self.assertFalse(self.check()['ok'], 'unreviewed opening')
+        (self.root / 'opening-review.json').write_text(json.dumps({'passed': True, 'sha256': m.digest(opening)}))
+        accepted = self.check()
+        self.assertTrue(accepted['ok'], accepted)
+        self.assertEqual(len(accepted['attachments']), 3)
+        parameters['video'][0] = 'https://example.invalid/the-wrong-clip'
+        self.assertFalse(self.check()['ok'], 'different video than recorded upload')
+        parameters['video'][0] = self.request['bindings'][1]['uploaded_url']
+        parameters['prompt'] = '按 Video 2 重建动作。'
+        self.assertFalse(self.check()['ok'], 'phantom video label')
+        parameters['prompt'] = '按视频1重建动作。'
+        opening.write_bytes(b'replaced after review')
+        self.assertFalse(self.check()['ok'], 'changed after review')
+
+    def test_legacy_one_video_slot_and_strict_images_only_rebuild(self):
+        self.request['reference_kind'] = 'video'
+        parameters = self.request['payload']['parameters']
+        parameters.update(prompt='视频1负责动作', video=['https://example.invalid/source'])
+        self.request['bindings'].append(
+            {'field': 'video', 'label': '视频1', 'asset_id': 'hero', 'sha256': self.fingerprint})
+        self.assertTrue(self.check()['ok'])
+        self.config['policy']['require_full_replacement_image'] = True
+        self.request.update(reference_kind='images-only', intent='recreation')
+        self.request['bindings'].pop()
+        parameters.pop('video')
+        parameters['prompt'] = '图片1负责身份'
+        self.assertFalse(self.check()['ok'], 'pure-image reconstruction still needs the checked opening')
+
     def test_missing_tool_and_cli_structured_failure(self):
         self.config['route'] = 'direct-haiyi'
         self.config['tools'] = {'python': 'intentionally-missing-python-abc'}

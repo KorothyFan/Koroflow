@@ -1,41 +1,30 @@
 ---
 name: koroflow
-description: 统筹可更换制作与发布平台的视频工作流，连接制作规范、素材与任务、质量验收、版本交付、每日整理统计和发布记录。用于完整视频生产、跨平台续作或管理工作流；单独海艺媒体操作用 haiyi-aigc，只写剧本用 video-director。
+description: 统筹视频制作、参考复刻、跨平台续作、审片、版本交付和发布记录。适用于从委托推进到成片或接手已有作品。单独剧本用 video-director，单独平台操作用实际平台技能。
 ---
 
-# KoroFlow 视频生产工作流
+# KoroFlow 视频生产
 
-围绕同一作品贯通制作、检查、交付、统计与发布。平台由用户已采用的能力和当次要求决定；海艺/Hypit 是现有制作适配器，其他生成平台、无限画布、浏览器/API/MCP或人工发布可以接入同一记录。不要因安装本技能切换模型、账号或重做历史视频。
+## 恢复本次委托
 
-## 先恢复实际项目
+从用户指定工作区读取当地 AGENTS、现行制作规则和本次 BRIEF/TREATMENT/PROGRESS。接手时定位已有 work_id、当前 revision、实际请求与原任务状态。能够在旧工程接续时沿用旧工程。核心记录缺失时按[旧记录接入](references/workflow.md)核对并按需导入。
 
-换机器先按仓库 `docs/laptop-setup.md` 重新配置与授权；技能自带 `scripts/migration.py` 和 [机器](assets/templates/machine.example.json)／[资产清单](assets/templates/asset-manifest.example.json)空模板，可在无源码安装中只读自检。它不联网、不提交生成、不认证远程素材。核对本地原生音频政策；Seedance要求声音时实际generateAudio为true，保留旧音轨与无BGM不等于关声。纯图重建见[多图参考](references/production-paths/image-reference-rebuild.md)。
+以本次用户要求决定做到哪里。找素材、分析、写稿、生产、修订、入库和发布各按委托范围推进。已有授权覆盖的制作继续执行。准备新机器时用相邻 `scripts/migration.py` 和[配置模板](assets/templates/machine.example.json)检查路径、工具与核准资产。
 
-读取用户本地制片约定、CREATIVE_PREFERENCES，以及当前项目 BRIEF/TREATMENT/PROGRESS 和真实任务回执。由仓库安装时 `references/local-setup.json` 提供工具路径；插件直接安装时使用本技能的 `scripts/workflow.py`。工作空间用显式 `--workspace` 或 KOROFLOW_WORKSPACE 定位，不默认建立新生产目录。
+## 依据本次工作推进
 
-已有项目的 work_id、第一交付日期和已选版本继续有效。没有新核心记录时，先用相邻 koro-operations 的 check/snapshot 恢复旧记录；不要将旧工程重新登记为新作。确需接入核心时，用 check --hash 导出的报告显式 import-legacy，导入不会产生新生成/新交付或补造历史日期。找不到旧工程的保留成片继续在原台账管理。
+| 工作 | 入口和完成依据 |
+| --- | --- |
+| 策划与参考复刻 | 从[制作路径](references/production-paths.md)选实现方式。复刻用[执行流程](references/reference-production-runbook.md)和[批次交接表](assets/templates/reference-production-batch.md)，逐版固定原片因果、角色职责、状态触发、元素和声音。调用已安装 video-director 准备原创或分镜 |
+| 准备资产与实际请求 | 按[制作规范](references/production-standard.md)核对本版必要资产、真实槽位和最终正文。落实本地画幅、声音、进度、档位和费用。使用实际接口或[适配器](references/adapters.md)，海艺/Hypit 交 hypit-haiyi。可用[离线检查单](assets/templates/request-preflight.example.json)引用最终请求文件 |
+| 提交与恢复 | 在本次授权内按依赖提交，立即保存请求、真实任务号和回执。结果未知先查原任务。纯图重建用[多图方法](references/production-paths/image-reference-rebuild.md)，参考为外观绑定时按实际能力描述 |
+| 审片与修订 | 保存原生结果，对齐原片事件和用户指定项。用真实成片分别验证技术、完整动作、听审、口型和画内元素。未查项留 `not_checked`。按问题做最小修订并保留旧版 |
+| 交付与运营 | 明确当前实际文件、revision、检查范围和用户采用。整理/统计/发布按本地流程和 koro-operations，沿用原 work_id 与真实事件 |
 
-## 按需要完成工作
+用户或工作区选择 HTML 时，按[方案与审片协作](references/production-review-experience.md)填[空模板](assets/templates/production-plan-review.html)。每项指定变更在方案、素材、实际请求、成片和现版页面里对应。只有材料、方案或候选时，页面显示实际状态。只交接制作方法可用[轻量模板](assets/templates/reference-task-handoff.md)。
 
-新AI／同事只接收制作方法时使用[轻量交接与启动词](assets/templates/reference-task-handoff.md)，不要求恢复全部历史库存；实际续作恢复对应工程和原任务。收到启动文字本身不提交生成。
+## 命令与记录
 
-参考复刻与多版本制作先按[执行流程](references/reference-production-runbook.md)恢复：已有产出核对、原片事实、版本职责与声音映射、按需资产及实际附件、提交接收、审片修订、交付采用与统计。用[批次交接表](assets/templates/reference-production-batch.md)保存当前状态；简单任务只写必要部分，素材专属条件不改成全局默认。
+`python -X utf8 scripts/workflow.py --workspace <实际工作区> --help`。配置也可由 KOROFLOW_WORKSPACE 指定。核心在 .koroflow 保存本地事件。route 是能力查询，prepare 保存请求或发布交接，record-task 记真实执行，register/review/deliver 管实际文件、检查与交付，bridge 导出工作区真实事件。范围与数据格式见[记录与执行](references/workflow.md)。
 
-按本次请求选择[制作路径与经验](references/production-paths.md)，只读相关路径：原视频编辑、解读复写、场景图驱动、保留原音轨、声音修订、连续漫画或外部成片／合集。某素材的时长、切点、对白与例外留在对应项目，不改成全局默认；路径可组合，记录方法不代表新增平台能力。
-
-原片复刻中缺件、修补或持久道具反复漂移时，读[A+C状态资产方法](references/production-paths/state-and-prop-continuity.md)，按需要补图并绑定角色、阶段与状态触发动作，不固定图片数量。
-
-新制作或付费修订先读 [完整制作规范](references/production-standard.md)，尤其“提交前必须核对：方案、参数与消耗”。先提供可核对的正式提示词、附件、精确模型档位、输出参数、报价合计与授权范围；已明确授权的同一批次继续执行，超范围变更或未授权付费重试再确认。角色附录是可替换示例，本地最新偏好优先；此流程不代表程序自动审批预算。
-
-1. **规范与导演**：读取本次质量要求与角色声音偏好，采用现有方案；新故事或原片拆解使用相邻 video-director。为素材标明身份、动作、场景或声音职责。只有文字委托时止于文字，不登记虚构媒体任务。
-2. **选择制作能力**：用 route 核对所需输入/能力与已选平台。现有海艺/Hypit任务使用相邻 hypit-haiyi；其他平台先按本地实际API/MCP/浏览器能力配置交接。能力不满足时报告缺口，不自动改模型或把参考重建当严格编辑。细节见 [平台接入](references/adapters.md)。
-3. **任务与恢复**：prepare 保存本地交接与请求指纹；核心本身不调用外部平台。实际提交只在既有授权内执行，立即记录远程任务ID，再记录运行、成功/失败或结果未知。新请求键不是付费重试授权，结果未知先查原任务。平台成功记录与主观成片验收分开。
-4. **检查与交付**：register 选定真实文件和来源，review 记录实际完整画面/声音的检查。未检查的项目保持 not_checked；不会听音频时不能假称听过，可用用户明确试听反馈补充依据。检查覆盖本次剧情/镜头、角色比例、动作接触、完整发声及口型、声音空间和真实编码。只有文件指纹一致且必检项通过才 deliver；改文件后另建 revision。字幕/标题等画内元素按当次要求，英文发布标题放元数据。
-5. **整理与统计**：真实开始、暂停、取消和交付写入核心后，显式 bridge 导出同一 work_id 的旧格式 UUID 统计事件；运行用户已有刷新器、分类和每日打包工具。既有汇总覆盖历史，本核心 report 只覆盖其日志，不混作全量产量。修订不新增独立成片，成功生成、交付、明确采用分开；手工发布字段按稳定编号保留。
-6. **发布**：有明确账号和发布范围时，先用 koro-operations plan 核对账号/品类/完整历史，再用核心 prepare 占用作品及文件，交给实际已连接的执行器或人工完成。该占用只约束同一核心工作空间的调用者，不能约束绕过记录的外部程序。已预约、已发布与结果未知分别记录证据；发布成功不自动新增采用事件，明确采用依据按用户规则追加。
-
-## 命令与边界
-
-`python -X utf8 scripts/workflow.py --workspace <目录> --help`。核心只操作本地记录；create/register/review/deliver/state/prepare/record-task/bridge 是实际写入命令，route/status/report/adapters 只读。init 只初始化不存在的 `.koroflow` 配置，不迁移项目。完整命令、数据格式与旧记录衔接见 [记录与执行](references/workflow.md)。
-
-每日目标、周末排期、角色偏好、账号和凭据保留在本地配置。按用户真实需求继续执行，不增加固定逐步审批。配置好接口不等于授权付费生成或发布；已授权范围持续有效。不要把核心日志、请求文件、账号设备信息、媒体或本机路径索引打包进公开插件。
+质量交付核对实际文件指纹和必检证据。可按用户要求提供候选并保留未完成项。采用与发布沿用用户选择和平台证据。已有汇总、手工字段、私人偏好和平台凭据继续由当地配置管理。

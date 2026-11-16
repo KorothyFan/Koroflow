@@ -1,21 +1,21 @@
-# KoroFlow workflow repository
+# KoroFlow 仓库维护约定
 
-For production planning and paid submission, read `skills/koroflow/references/production-standard.md`. Present a concrete plan, exact model tier and parameters, inputs, real-time estimated costs and authorization scope before paid submission unless that exact scope is already explicitly authorized. Use `templates/production-confirmation.md` for the reviewable handoff. The confirmation is an operator workflow, not a claimed programmatic budget lock. Keep local role/account/target settings separate from portable defaults.
+## 仓库和私人工作区
 
-For complete video workflows, read `skills/koroflow/SKILL.md`. Preserve the user's chosen production/publishing platforms and local quality rules. Haiyi/Hypit is an existing adapter, documented in `skills/hypit-haiyi/SKILL.md`; the local generic core is `scripts/koroflow.py`. Core records do not invoke platforms. Do not create a false connector or claim a configured descriptor proves live connectivity. Local paths remain in ignored configuration.
+- 看 [README](README.md) 确认本次涉及的入口。[架构](docs/architecture.md) 管本地记录、适配器和实际执行器，[安装指南](docs/laptop-setup.md) 管新机配置。
+- 制作任务从用户实际工作区开始。读取该处 AGENTS、当地现行规则、项目 BRIEF/TREATMENT/PROGRESS、当前 revision 和真实回执。这里的模板与示例仅提供可移植方法。
+- 私人身份、资产、提示词、账号、路径配置、凭据、运行日志及成片留在用户工作区。发布源码包维护 [显式文件清单](scripts/bundle.mjs)，源自 Hypit 的部分保留 [来源声明](NOTICE.md) 和 [许可](third-party/HYPIT-LICENSE)。
 
-For reference recreation batches, follow `skills/koroflow/references/reference-production-runbook.md`: check existing and external outputs, preserve source facts, map source responsibilities to target identities and voices, inspect only the needed assets, bind actual request indices and hashes, then receive, review and hand off real versions. Explicit production instructions can authorize their scope without repeated fixed-word approval. Keep candidate access, requested file handoff, quality acceptance and adoption separate; never falsify quality reviews to pass a delivery gate. Asset counts, time limits and historical prices are project-specific.
+## 维护制作流程
 
-Keep video projects separate from the tool and Provider installation. Use `scripts/workflow.mjs init` for new projects. Never replace an existing production with the demo prompt.
+- [koroflow](skills/koroflow/SKILL.md) 负责完整流程。导演、海艺/Hypit、入库和发布分别从各自技能进入。通用规则收敛到[制作规范](skills/koroflow/references/production-standard.md)和[复刻执行流程](skills/koroflow/references/reference-production-runbook.md)，平台差异写入对应适配文档。
+- 每版把用户要求和原片关键事件落实到替换方案、资产职责、实际请求及成片证据。按用户约定提供 [HTML 方案与审片](skills/koroflow/references/production-review-experience.md)，页面取当前所选版本及真实文件。
+- 正式请求、实际附件、模型档位、参数、费用和授权按[提交预检](skills/hypit-haiyi/references/production.md)核对。已有明确范围继续执行。结果未知时先查原任务。离线检查只确认本地证据和参数。
+- 修订沿用 work_id，保留首次交付日期、旧版和实际检查范围。候选、合格交付、用户采用、预约、发布各用对应证据。用户明确验收入库时沿用其选择，操作者独立检查状态照实保留。
+- 核心在显式工作区的 .koroflow 保存事件；prepare 保存交接，bridge 导出真实事件。保持旧工程的显式导入和既有台账兼容，避免重新登记或回填虚构状态。适配器以实际支持的输入和模式为准。
 
-For integration development, use the commit pinned in `upstream.json`. Run `node scripts/workflow.mjs verify` after changing Provider behavior or execution/setup helpers. This performs offline mock tests and Source/plan validation, not paid generation. Check skill metadata with the installed skill-creator validator when available.
+## 验证与分发
 
-Never commit `.local`, credentials, node_modules, runtime databases or generated customer media. Keep package distribution source-only using `scripts/bundle.mjs`. Do not publish the repository or submit paid generation simply to validate installation.
-
-Preserve upstream attribution and terms from `NOTICE.md` and `third-party/HYPIT-LICENSE`. Do not describe this integration as an official joint plugin or claim live generation was verified by mock tests.
-
-For delivery records, production counts or publication planning, read `skills/koro-operations/SKILL.md`. Its Python CLI performs offline checks only. Run `python -X utf8 -m unittest discover -s tests -p "test_*.py" -v` after changing operations or packaging; use an available Python 3.11+ interpreter. Keep production-target and publishing-account registries separate. Preserve manual ledger fields by stable IDs and distinguish proposed plans, confirmed schedules and verified platform publications.
-
-The plugin uses root `plugin.json` and a repo catalog at `.agents/plugins/marketplace.json`. Source bundles must retain the explicit allowlist in `scripts/bundle.mjs`; never bundle whole local skill folders containing generated path indexes or runtime caches. Do not add local account records, device addresses, customer files or evidence screenshots to public examples.
-
-The core journal lives in user workspaces under `.koroflow`, never in source distribution. Quality reviews bind actual file hashes; revisions preserve work_id and first delivery date. Use isolated temporary workspaces in tests. `bridge` exports only actual core events to the existing project format; it never refreshes Excel or fabricates successful platform jobs. Existing projects need explicit legacy import, not re-registration as new works. Keep prepared/submitted/unknown/scheduled/published states distinct and preserve unknown outcomes before retries.
+- 改 Python 核心、预检、运营、安装或分发后，用 Python 3.11+ 运行 `python -X utf8 -m unittest discover -s tests -p "test_*.py" -v`。测试使用临时工作区。
+- 改 Provider、执行入口或接入方式后，用 [upstream.json](upstream.json) 固定的 Hypit 执行 `node scripts/workflow.mjs verify`。这是离线 mock、Source 检查和 Run 计划验证。
+- 改技能时检查各自入口、相对链接、安装副本和本机覆盖设置。插件元数据在 [plugin.json](plugin.json) 和 [.agents/plugins/marketplace.json](.agents/plugins/marketplace.json)。按源文件清单验证打包。

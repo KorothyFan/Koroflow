@@ -1,44 +1,26 @@
 ---
 name: hypit-haiyi
-description: KoroFlow 的海艺与 Hypit 制作适配技能。用于已选海艺平台的视频生成、复刻编辑、素材复用和Hypit编排渲染；完整跨平台生产与运营由koroflow统筹，单独海艺媒体操作使用haiyi-aigc。
+description: 海艺与 Hypit 的视频制作适配技能。用于已选路线的参考复刻、生成资产、Source/Run 编排与渲染。跨平台制作和运营由 koroflow 统筹，单独海艺媒体操作使用 haiyi-aigc。
 ---
 
-# Hypit + 海艺视频工坊
+# 海艺与 Hypit 制作
 
-这是 [KoroFlow](../koroflow/SKILL.md) 的现有制作适配路径：导演与剧本模块完成前期创作，海艺提供云端素材生成，Hypit 负责分镜、时间线与渲染。用户已选海艺时继续采用；其他平台沿用同一作品与质量记录，按实际能力接入，不因本技能存在而切换回来。集成不承诺提高模型的基础画质。
+## 找到实际执行器
 
-涉及作品编号、交付记录、每日产量、账号发布计划或台账回填时，读取相邻的 [KoroFlow 制作与发布管理](../koro-operations/SKILL.md)，使用用户本地配置与原统计口径。单纯制作任务不因此扩展成账号发布任务；安装或同步规范不启动历史任务。
+从 `references/local-setup.json` 定位仓库 `scripts/workflow.mjs`、Hypit 安装和海艺技能。缺配置读[安装与调用](references/setup.md)。沿用用户已选路线、账号和价档。适配器支持范围见[能力](references/capabilities.md)，当前平台参数与报价以所用入口核实。对海艺的其他工具使用实际安装的 haiyi-aigc。
 
-## 定位配置与工具
+读取本地制作 AGENTS、适用规则和项目 BRIEF/TREATMENT/PROGRESS、采用的 Source/Run、已选 Candidates 与 Runtime 状态。新 Hypit 项目用 init 放在本次工作区，工具和 Provider 共用，项目数据各自保存。
 
-- 先读 `references/local-setup.json`（安装脚本生成），找到代码库、执行脚本、Hypit 安装和原海艺技能位置。文件只有路径，没有 Token。不存在时读 [安装与调用](references/setup.md)，定位或安装代码库；不要凭空假定某台机器上的路径。
-- 执行入口是代码库的 `scripts/workflow.mjs`；`node <入口> info` 报告当前状态。`setup`、`init`、`verify`、`check`、`plan` 都不提交生成任务。
-- 使用已选定的海艺账号和本地 Hypit，不因新聊天重新安装、切换到 HypiHub 或让用户再下载配置包。
-- 读取已安装 `hypit/SKILL.md` 获取创作与制作指导。若尚未安装，`install-skill` 会从固定版本工具目录补装缺失的 Hypit 技能。只读取当前任务需要的 Hypit 参考页。
-- 海艺音乐、TTS、增强、字幕擦除等补充功能按已安装 `haiyi-aigc/SKILL.md` 使用；这些功能尚未绑定为 Hypit Provider 能力。缺失时说明缺失项，不能宣称已集成。拿到实际素材后再作为 Hypit 输入。
+## 从方案到本版实际输入
 
-## 选择制作工作流
+- 参考复刻用[角色替换工作流](references/character-replacement.md)和[提示词方向](references/prompt-direction.md)。原片负责已有动态，图负责其获准的身份、外观或状态。原片、参考图和真实首尾帧按当前能力绑定。各版本逐人适配比例、材质、肢体、接触和发声。
+- 新制作按需要接续 video-director 的方案；按已安装 Hypit 的相关创作与模型参考写 Source。具体资产按本次需求上传。复用已接受素材时在 Run 中明确选择；参考图不合格先处理。
+- 用户或本地规则选择指定项或 HTML 时，把对应修订贯穿实际图、素材槽位、最终正文、参数和当前结果。H3 专用规则只看 [H3 可选路径](references/h3-integration.md)。
 
-此用户的主要视频工作是复刻原片并替换角色。遇到原视频加目标角色的请求，优先读 [视频复刻与角色替换](references/character-replacement.md)：先分析原片与角色映射，沿用剧情和镜头关系，再选择实际支持的编辑或重建路径。导演模块负责拆解与迁移，不默认重新创作剧本。严格编辑与参考重建要明确区分；没有原片时不能凭假定开始复刻。用户提出原创视频时使用下方流程。
+## 预检、执行、核对
 
-## 通用生产流程
+1. 按[执行与复用](references/production.md)检查最终 Source/Run、真实附件映射、模型档位、原生画幅/声音和范围。使用 check、plan，以及所需的 pricing 或 doctor。已有最终 payload JSON 时用 koroflow 的离线检查单引用该文件，按实际媒体字段核对。音频依当地约定，`generateAudio: true` 在需要原生声音的 Seedance 请求上显式生效。
+2. 在本次已授权范围执行 build 或所选平台提交。保留真正的请求、Build/任务号和回执。等待窗口关闭或结果未知时查询原任务；凭据或 Worker 需要调整时先确认活动任务。使用本机安全存储的凭据。
+3. 保存原生输出。按实际看听范围核对完整动作、声音、口型、标题/字幕政策和最终编码。只按授权处理修订或本地渲染，沿同一 work_id 更新 PROGRESS、当前 revision 与审片入口。
 
-1. 新制作先读内置 [导演与剧本](../video-director/SKILL.md)，完成符合目标的创作方案、剧本、分镜和素材依赖。把用户事实、画幅、时长、素材范围和已接受付费范围保存到 `BRIEF.md`，导演方案保存到 `TREATMENT.md`。只请求文字成果时不提交媒体生成；已委托完整制作且范围明确时继续生产，不增加逐步审批。
-2. 新项目用 `init` 放在当前任务的工作目录，工具和 Provider 共用，项目的素材、Runs、Results 独立。已有项目先读 `PROGRESS.md`、Sources、Runs、Results 和 Runtime 状态后继续；沿用已采用的方案和剧本，只调整本次要求涉及的部分。草稿采用后，Author Source 的 `<script>` 是唯一正式台词来源，分镜引用片段 id。
-3. 根据角色、场景和产品一致性安排参考图、首尾帧和镜头间素材关系。写图片或视频提示词前读 Hypit 对应的 image-direction / video-direction 指导与模型文档。不要直接拿演示提示词当成用户的成片。
-   写或审查视频请求时读 [参考素材与逐镜提示词设计](references/prompt-direction.md)，明确素材职责、保留/改变项、动作过程和声音角色。它适用于 Seedance；H3 特有格式与参数只在 [H3 可选路径](references/h3-integration.md) 使用，不改变默认模型或已接受流程。
-4. 通过本集成 Provider 生成已支持的图片和视频，使用 Hypit 的 Source、Run 和明确 Candidates 复用已接受素材。参考附件按实际需要上传，不自动扫描或上传其他项目素材。
-5. 检查 Source，并用 `plan` 核对剩余请求、绑定、输入约束和复用；必要时调用 `pricing` 查实时价格。模型与价格以海艺实时返回为准，不能从旧测试推断账号可用性。提交前读取 [执行与复用](references/production.md)。
-6. 用户已授权的生成范围与预算支持执行 `build`，不在每个镜头重复询问。配置账号本身不是付费生成授权；尚未明确的付费范围要在实际提交前与用户确认。
-7. 用 Hypit 实现所需剪辑、字幕、声音与视觉效果，制作预览，检查实际生成素材和最终编码文件的画面、声音、人物与产品一致性、时长及字幕可读性。交付视频、可编辑项目并更新 `PROGRESS.md`。
-
-## 运行边界
-
-- 当前直接路由仅为 Seedance 2.5 和 GPT Image（海艺实际模型为 GPT Image 2.5 Flare）；不是海艺所有模型通用适配器。参数与限制见 [能力](references/capabilities.md)。超出范围时先查询、说明并调整实现，不悄悄改模型。
-- 凭据只从环境或海艺已授权的 Token 存储读取。不要输出、保存到项目、写入 Git 或压缩包。
-- 新项目 Runtime 用自己的 `.hypit` 数据目录。环境变量被 Worker 启动时继承；凭据变更后先检查活动任务再处理 Worker，不能直接中断生产。
-- `--follow` 结束不代表 Build 已停止；先查询状态。已提交但未拿到响应的请求可能仍在海艺运行，先查任务，避免重复付费提交。
-- 失败或超时保留任务 id、已成功 Outputs 和错误证据。未授权的付费重试不自动执行；经用户接受的重试范围可以继续，复用素材需在新 Run 中显式选定。
-- 验证通过只表示配置、参数与本地 mock 测试通过；只有真实生成成功并看过成片，才能报告生成链路和成片质量已验证。
-
-使用用户语言说明创作决定、进展和真实限制。新任务自动发现技能是匹配机制；用户可明确指定 `$hypit-haiyi` 来稳定选择此入口。
+`verify` 运行离线 Provider mock、Source 检查与计划。作品记录、入库和发布按 koroflow / koro-operations 的现有配置执行。

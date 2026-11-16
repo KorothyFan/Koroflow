@@ -35,7 +35,7 @@ node scripts/workflow.mjs info
 node scripts/workflow.mjs verify
 ```
 
-已有固定版本Hypit时，改用 `setup --hypit-root "<本机Hypit目录>"`；完整选项与调用见[适配器安装说明](../skills/hypit-haiyi/references/setup.md)。setup下载／编译并写本机 `.local/config.json`；install-skill写入当前CODEX_HOME/skills（默认用户的 `.codex/skills`）并重建local-setup。移动目录后重跑配置，别复制旧绝对路径JSON冒充安装完成。已有技能建议先备份再更新；重新开启或刷新Codex任务确认技能被发现。
+已有固定版本 Hypit 时，改用 `setup --hypit-root "<本机Hypit目录>"`，完整选项见[适配器安装说明](../skills/hypit-haiyi/references/setup.md)。setup 下载／编译并写本机 `.local/config.json`。install-skill 更新当前 CODEX_HOME/skills（默认用户的 `.codex/skills`）和工具入口，保留已选工作区与运营配置路径。移动后核对这些路径，再刷新或开启下一次 Codex 任务。
 
 Python工具可直接从源码运行，或使用已安装koroflow技能的 `scripts/migration.py`；后者自包含，不依赖源码根。直接海艺路线另按该技能当前说明安装及授权，不要运行Hypit setup来代替安装海艺原技能。
 
@@ -63,7 +63,9 @@ python -X utf8 scripts/migration.py --config "<私人目录>/machine.json" --req
 python -X utf8 -m unittest discover -s tests -p "test_*.py"
 ```
 
-工具只读本地文件、计算指纹并运行工具版本/requests导入检查，无网络、无上传、无生成。请求JSON是包裹实际payload的检查交接格式，不能直接提交平台；覆盖最新真实请求再检查，不拿示例占位符当可用模型。它核对本地策略、字段、附件索引／指纹和纯图引用；不会认证远程URL内容、自动观看素材、听音、查模型/报价/授权或替代平台schema校验，也不能阻止绕过工具的提交。
+两条执行路线可共用一份策略，备选配置使用 `"policy_from": "./machine.json"` 指向含 `policy` 的配置。画幅和是否要求原生音频按工作区选择，临时例外记录当次明确依据。完整替换图和上传槽位核验可分别用 `require_full_replacement_image` 和 `require_upload_binding` 启用。
+
+工具只读文件、计算指纹及检查工具版本。检查单可用 `payload_file` 指向最终请求。字段、素材角色和证据格式见[执行预检](../skills/hypit-haiyi/references/production.md)。模型当前能力、报价、授权、远端素材内容和成片音画按各自真实来源检查。
 
 ## 首个新项目
 

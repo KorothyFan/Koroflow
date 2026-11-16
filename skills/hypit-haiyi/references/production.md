@@ -12,7 +12,16 @@
 
 参考复刻批次可按相邻koroflow技能的[执行流程](../../koroflow/references/reference-production-runbook.md)交接：先核对重复产出，固定源角色职责与目标身份、声音，按需补资产；检查后将正式提示词标签与实际请求数组、文件指纹逐项对应。按当前模型实际限制判断整段或分段，不把历史上限、图数或价档当跨平台默认。
 
-上述为操作者流程，当前代码并未实现统一预算审批弹窗或全部提交路径的费用锁。
+## 核对实际海艺请求
+
+有实际 payload JSON 时，用 koroflow 的 [检查单](../../koroflow/assets/templates/request-preflight.example.json)引用保存的最终请求，执行 `python -X utf8 <koroflow>/scripts/migration.py --config <本地配置> --request <检查单>`。检查单支持 `payload_file` 或内嵌 `payload`。确认提交读取同一份 payload，改正文、附件或参数后重检。报告的 payload_sha256 对应解析后的 JSON 内容。
+
+- 按最终请求列每个实际附件的 `field`、`sha256` 和清单 `asset_id` 或本地 `path`。数组索引从 0 开始，正文编号从 1 开始。海艺/Hypit 的 `video[0]`、`audio[0]` 依实际请求，单个字符串的 video 对应 `video`。项目文件和检查记录的相对路径从检查单的位置计算。
+- 启用上传槽位核验时，从该文件真实上传回执记录 `uploaded_url`，对照实际请求槽位。工具核验本地文件字节和记录的 URL，远端 URL 内容由实际回执佐证。
+- 启用完整替换图时，复刻标 `intent: recreation`，其他制作标 `other`。已实看通过的完整图按图片实际槽位填写 `purpose: replacement_opening` 和 `review_file`；该 JSON 记录 `passed: true`、图的 `sha256` 与检查依据。只看过身份图或局部道具时继续完成整图。确有当次例外用 `opening_exception` 记用户依据。
+- 画幅由 `policy.aspect_ratio` 核对；明确例外用 `aspect_ratio_exception` 的 `value` 和 `basis`。`expected_parameters`、`expected_model` 可对照本版已确定的参数和实际模型描述。时长适配所选路线支持范围。相同请求状态未知时优先查询原任务。
+
+Hypit 的 plan 用来确认最终 Source/Run、素材引用、参数和请求数量。上传后 Provider 才获得实际 URL，有对应实际请求证据时按上述方式反查。本地预检由操作者执行。平台持续以其实际能力和授权执行。
 
 ## 执行与实际交付
 

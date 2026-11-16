@@ -13,6 +13,7 @@
     "require_native_audio": false,
     "bgm": "per-brief",
     "dialogue_language": "per-brief",
-    "replace_scene_and_elements": false
+    "require_full_replacement_image": false,
+    "require_upload_binding": false
   }
 }

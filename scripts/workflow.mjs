@@ -45,6 +45,16 @@ async function config() {
   return json(localFile);
 }
 
+async function updateSkillSetup(path, defaults, keep) {
+  const previous = existsSync(path) ? await json(path) : null;
+  if (previous?.format === defaults.format) {
+    for (const key of keep) {
+      if (typeof previous[key] === 'string' && previous[key].trim()) defaults[key] = previous[key];
+    }
+  }
+  await saveJson(path, defaults);
+}
+
 function executable(name, selected) {
   if (selected) {
     const path = resolve(selected);
@@ -151,18 +161,18 @@ async function installSkill(args) {
     console.log(`Installed bundled skill: ${destination}`);
   }
   if (!directorOnly && !coreOnly) {
-    await saveJson(join(skillHome, 'koro-operations/references/local-setup.json'), {
+    await updateSkillSetup(join(skillHome, 'koro-operations/references/local-setup.json'), {
       format: 'koro.operations.skill-local@1', repositoryRoot: repo,
       operationsScript: join(skillHome, 'koro-operations/scripts/operations.py'),
       configFile: join(repo, '.local/operations.json'),
-    });
+    }, ['configFile']);
   }
   if (!directorOnly && !operationsOnly) {
-    await saveJson(join(skillHome, 'koroflow/references/local-setup.json'), {
+    await updateSkillSetup(join(skillHome, 'koroflow/references/local-setup.json'), {
       format: 'koroflow.skill-local@1', repositoryRoot: repo,
       workflowScript: join(skillHome, 'koroflow/scripts/workflow.py'),
       operationsConfig: join(repo, '.local/operations.json'), workspace: null,
-    });
+    }, ['operationsConfig', 'workspace']);
   }
   if (coreOnly) return;
   if (operationsOnly) return;

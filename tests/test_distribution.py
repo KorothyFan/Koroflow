@@ -54,6 +54,20 @@ class DistributionTest(unittest.TestCase):
         self.assertTrue(json.loads(call.stdout)["initialized"])
         self.assertFalse((self.root / "codex/skills/hypit").exists())
 
+    def test_skill_upgrade_preserves_the_selected_workspace_and_operations_index(self):
+        custom_config = str(self.root / "private" / "operations.json")
+        for skill_name, option, overrides in (
+            ("koroflow", "--core-only", {"operationsConfig": custom_config, "workspace": str(self.root / "active")}),
+            ("koro-operations", "--operations-only", {"configFile": custom_config}),
+        ):
+            self.node(ROOT / "scripts/workflow.mjs", "install-skill", option)
+            path = self.root / "codex/skills" / skill_name / "references/local-setup.json"
+            settings = json.loads(path.read_text(encoding="utf-8"))
+            path.write_text(json.dumps({**settings, **overrides}), encoding="utf-8")
+            self.node(ROOT / "scripts/workflow.mjs", "install-skill", option)
+            updated = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual({key: updated[key] for key in overrides}, overrides)
+
     def test_source_zip_contains_plugin_and_runs_after_extraction(self):
         archive = self.root / "bundle.zip"
         self.node(ROOT / "scripts/bundle.mjs", archive)

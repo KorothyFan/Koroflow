@@ -16,6 +16,8 @@ const entries = ['README.md', 'NOTICE.md', 'AGENTS.md', 'package.json', '.gitign
   'skills/koroflow/references/defaults.json', 'skills/koroflow/references/adapters.md',
   'skills/koroflow/references/workflow.md', 'skills/koroflow/references/production-standard.md', 'skills/koroflow/scripts/workflow.py',
   'skills/koroflow/references/reference-production-runbook.md',
+  'skills/koroflow/references/production-review-experience.md',
+  'skills/koroflow/assets/templates/production-plan-review.html',
   'skills/koroflow/references/production-paths.md',
   'skills/koroflow/references/production-paths/source-video-edit.md',
   'skills/koroflow/references/production-paths/reference-rebuild.md',

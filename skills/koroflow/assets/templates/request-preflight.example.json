@@ -1,18 +1,19 @@
 {
   "format": "koroflow.request-inspection@1",
+  "intent": "recreation",
   "reference_kind": "images-only",
-  "payload": {
-    "model": "REPLACE_WITH_CURRENT_MODEL_AND_TIER",
-    "parameters": {
-      "prompt": "图片1负责身份。按已分析的剧情完成开场、动作、揭示和结尾；保持资产比例材质，生成合理动作声、环境声与角色反应，无BGM。",
-      "images": ["REPLACE_WITH_ACTUAL_UPLOADED_URL"],
-      "roleMode": "reference",
-      "generateAudio": true
-    }
-  },
+  "payload_file": "actual-video-request.json",
   "sound_plan": "Native character/action/environment sound; no BGM. Fill exact words and speakers per brief.",
   "bindings": [
-    {"label": "图片1", "field": "images[0]", "asset_id": "unique-id", "sha256": "REPLACE_WITH_MANIFEST_SHA256"}
+    {
+      "label": "图片1",
+      "field": "images[0]",
+      "path": "checked-opening.png",
+      "sha256": "REPLACE_WITH_ACTUAL_FILE_SHA256",
+      "uploaded_url": "REPLACE_WITH_URL_FROM_ACTUAL_UPLOAD_RECEIPT",
+      "purpose": "replacement_opening",
+      "review_file": "opening-review.json"
+    }
   ],
   "previous_task_status": "not_submitted",
   "explicit_silent_reason": "",
